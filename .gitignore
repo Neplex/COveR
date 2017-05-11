@@ -3,25 +3,30 @@
 .Rhistory
 .RData
 *.Rcheck
+man/
 
 # Object files
 *.o
 *.ko
 *.obj
 *.elf
+
 # Precompiled Headers
 *.gch
 *.pch
+
 # Libraries
 *.lib
 *.a
 *.la
 *.lo
+
 # Shared objects (inc. Windows DLLs)
 *.dll
 *.so
 *.so.*
 *.dylib
+
 # Executables
 *.exe
 *.out
@@ -32,14 +37,15 @@
 # Debug files
 *.dSYM/
 *.su
+
 # Autoconf
 configure
 config.status
 Makevars
-# Logs
+
+# Logs & Cache
 *.log
-# Cache
 *.cache
+
 # Bin
 *.tar.gz
-inst/doc
