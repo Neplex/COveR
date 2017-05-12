@@ -1,5 +1,3 @@
-source("R/interval.R")
-
 #' Interval okm clustering.
 #'
 #' Culster interval data with okm algorithm.

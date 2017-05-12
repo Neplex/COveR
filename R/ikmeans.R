@@ -1,5 +1,3 @@
-source("R/interval.R")
-
 #' Interval kmeans clustering.
 #'
 #' Culster interval data with kmeans algorithm.

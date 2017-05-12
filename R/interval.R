@@ -5,7 +5,7 @@
 #'
 #' @export
 is.interval <- function(x) {
-  class(x) == "interval" && length(dim(x$inter)) == 3 && dim(x$inter)[2] == 2 && 
+  class(x) == "interval" && length(dim(x$inter)) == 3 && dim(x$inter)[2] == 2 &&
     is.vector(x$class)
 }
 
@@ -31,7 +31,9 @@ print.interval <- function(x, ...) {
 #' @param ... Other options from read.
 #'
 #' @export
-read.interval <- function(..., row.names = FALSE, class) {
+read.interval <- function(..., row.names = FALSE, class = NULL) {
+  args <- list(...)
+
   if (!is.logical(row.names))
     stop("row.names must be logical")
 
@@ -44,7 +46,7 @@ read.interval <- function(..., row.names = FALSE, class) {
     names <- NULL
   }
 
-  if (hasArg(class)) {
+  if (!is.null(class)) {
     if (!is.numeric(class))
       stop("class must be numeric")
     classes <- as.vector(frame[, class])
@@ -57,7 +59,9 @@ read.interval <- function(..., row.names = FALSE, class) {
   if ((ncol(frame)%%2) != 0)
     stop("Not a valid interval csv")
 
-  colnames <- unique(substr(colnames(frame), 5, 100))
+  colnames <- NULL
+  if (!is.null(args$header) && args$header)
+    colnames <- unique(substr(colnames(frame), 5, 100))
   names <- list(names, c("min", "max"), colnames)
   d <- as.vector(as.matrix(frame))
   # Create 3D array (persons * 2 * intervals)
@@ -189,24 +193,36 @@ iaggregate <- function(data, col = 1) {
 #' ibind(iaggregate(iris,5), iaggregate(iris,5), iaggregate(iris,5), class=TRUE)
 ibind <- function(..., class = FALSE) {
   inters <- list(...)
+
   inter <- as.matrix(inters[[1]])
+  row_names <- dimnames(inters[[1]]$inter)[[1]]
+  dim_names <- dimnames(inters[[1]]$inter)[[3]]
+
   if (class) {
     classes <- rep(1, nrow(inter))
   } else {
     classes <- inters[[1]]$class
   }
 
-  for (i in 2:length(inters)) {
-    it <- as.matrix(inters[[i]])
-    inter <- rbind(inter, it)
-    if (class) {
-      classes <- c(classes, rep(i, nrow(it)))
-    } else {
-      classes <- c(classes, inters[[i]]$class)
+  if (length(inters) > 1) {
+    for (i in 2:length(inters)) {
+      it <- as.matrix(inters[[i]])
+      dn <- dimnames(inters[[i]]$inter)[[1]]
+
+      inter <- rbind(inter, it)
+      row_names <- c(row_names, dn)
+
+      if (class) {
+        classes <- c(classes, rep(i, nrow(it)))
+      } else {
+        classes <- c(classes, inters[[i]]$class)
+      }
     }
   }
 
   data <- as.interval(inter)
+  dimnames(data$inter)[[1]] <- row_names
+  dimnames(data$inter)[[3]] <- dim_names
   data$class <- classes
 
   if (!is.interval(data))

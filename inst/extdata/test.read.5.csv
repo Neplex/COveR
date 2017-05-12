@@ -1,0 +1,6 @@
+"ville","min.temp","max.temp","class"
+"Paris",0,50,"N"
+"Orleans",0,50,"N"
+"Lille",100,200,"N"
+"Strasbourg",100,200,"E"
+"Marseille",100,200,"S"
