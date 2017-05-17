@@ -26,8 +26,6 @@ dimnames(i4$inter)[[1]] <- r
 i5 <- i4
 i5$class <- c
 
-print(read.interval(f6, row.names = F, header = F))
-
 # -- TESTS ---------------------------------------------------------------------
 
 test_that("read.interval", {

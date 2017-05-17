@@ -63,7 +63,7 @@ read.interval <- function(..., row.names = FALSE, class = NULL) {
   if (!is.null(args$header) && args$header)
     colnames <- unique(substr(colnames(frame), 5, 100))
   names <- list(names, c("min", "max"), colnames)
-  d <- as.vector(as.matrix(frame))
+  d <- as.numeric(as.vector(as.matrix(frame)))
   # Create 3D array (persons * 2 * intervals)
   data <- array(d, dim = c(nrow(frame), 2, ncol(frame)/2), dimnames = names)
 
@@ -221,8 +221,8 @@ ibind <- function(..., class = FALSE) {
   }
 
   data <- as.interval(inter)
-  dimnames(data$inter)[[1]] <- row_names
-  dimnames(data$inter)[[3]] <- dim_names
+  if(!is.null(row_names)) dimnames(data$inter)[[1]] <- row_names
+  if(!is.null(dim_names)) dimnames(data$inter)[[3]] <- dim_names
   data$class <- classes
 
   if (!is.interval(data))

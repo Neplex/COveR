@@ -18,7 +18,12 @@
 #define max(x, y) ((x > y) ? x : y)
 #define min(x, y) ((x < y) ? x : y)
 
-int range_rand(int a, int b) { return (int)unif_rand() * (b - a) + a; }
+int range_rand(int a, int b) {
+  GetRNGstate();
+  int v = unif_rand() * (b - a) + a;
+  PutRNGstate();
+  return (int)v;
+}
 
 // ===== Type definition =====
 
@@ -161,7 +166,6 @@ double haus_distance(const Interval *r1, const Interval *r2,
 void initClusters(Interval **elements, Interval **clusters,
                   unsigned nb_elements, unsigned nb_clusters,
                   unsigned nb_interval) {
-  GetRNGstate();
 
   // All available index
   unsigned t[nb_elements];
@@ -182,8 +186,6 @@ void initClusters(Interval **elements, Interval **clusters,
       clusters[i][j] = e[j];
     }
   }
-
-  PutRNGstate();
 }
 
 // ===== Trace =====
