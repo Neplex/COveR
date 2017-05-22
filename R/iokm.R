@@ -108,7 +108,7 @@ iokm <- function(x, centers, nstart = 10, distance = "euclid", algorithm = "std"
   wss <- c[[4]]
   totwss <- c[[5]]
   bss <- totss - totwss
-  size <- dim(centers$inter)[1]  #TODO: change size to vector nb elem by cluster
+  size <- colSums(cluster)
   iter <- c[[6]]
   over <- mean(rowSums(cluster))
 

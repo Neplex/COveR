@@ -30,7 +30,7 @@ help:
 	@echo "- doc"
 	@echo "- clean"
 
-config:
+config: clean
 	autoconf
 	./configure
 

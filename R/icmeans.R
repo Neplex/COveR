@@ -1,10 +1,11 @@
-#' Interval kmeans clustering.
+#' Interval fuzzy cmeans clustering.
 #'
-#' Culster interval data with kmeans algorithm.
-#' @useDynLib icluster R_ikmeans
+#' Culster interval data with fuzzy cmeans algorithm.
+#' @useDynLib icluster R_icmeans
 #'
 #' @param x An 3D interval array.
 #' @param centers A number or interval, number of cluster for clustering or pre init centers.
+#' @param m A number greater than 1 giving the degree of fuzzification.
 #' @param nstart A number, number of execution to find the best result.
 #' @param distance A string ('euclid': Euclidian distance, 'hausdorff': Hausdorff distance).
 #' @param trace A boolean, tracing information on the progress of the algorithm is produced.
@@ -13,9 +14,9 @@
 #' @export
 #'
 #' @examples
-#' ikmeans(iaggregate(iris, col=5), 2)
-#' ikmeans(iaggregate(iris, col=5), iaggregate(iris, col=5))
-ikmeans <- function(x, centers, nstart = 10, distance = "euclid", trace = FALSE,
+#' icmeans(iaggregate(iris, col=5), 2)
+#' icmeans(iaggregate(iris, col=5), iaggregate(iris, col=5))
+icmeans <- function(x, centers, m = 2, nstart = 10, distance = "euclid", trace = FALSE,
   iter.max = 20) {
   nc <- 0
   c <- NULL
@@ -39,6 +40,11 @@ ikmeans <- function(x, centers, nstart = 10, distance = "euclid", trace = FALSE,
       stop("x and centers must have the same number of intervals")
 
   } else stop("centers must be double, interval, vector or matrix")
+
+  if (!is.numeric(m))
+    stop("m must be numeric")
+  if (m <= 1)
+    stop("m must be greater than 1")
 
   if (!is.numeric(nstart))
     stop("nstart must be numeric")
@@ -69,7 +75,7 @@ ikmeans <- function(x, centers, nstart = 10, distance = "euclid", trace = FALSE,
   d <- dim(x$inter)
   n <- dimnames(x$inter)
   v <- as.numeric(as.vector(x$inter))
-  c <- .Call(R_ikmeans, v, d[1], d[2], d[3], nc, nstart, dist, trace, iter.max,
+  c <- .Call(R_icmeans, v, d[1], d[2], d[3], nc, m, nstart, dist, trace, iter.max,
     c)
 
   # Naming
@@ -82,31 +88,33 @@ ikmeans <- function(x, centers, nstart = 10, distance = "euclid", trace = FALSE,
   if (dim(centers)[1] == 1 && length(dim(centers)) < 3)
     centers <- array(as.vector(centers), dim = list(1, 2, d[3]))
 
-  cluster <- c[[1]]
+  cluster <- round(c[[1]], 2)
   centers <- as.interval(centers)
   totss <- c[[3]]
   wss <- c[[4]]
   totwss <- c[[5]]
   bss <- totss - totwss
-  size <- as.vector(table(cluster))
+  size <- colSums(cluster != 0)
   iter <- c[[6]]
+  over <- mean(rowSums(cluster != 0))
 
   # Result
   structure(list(cluster = cluster, centers = centers, totss = totss, withinss = wss,
-    tot.withinss = totwss, betweenss = bss, size = size, iter = iter), class = "ikmeans")
+    tot.withinss = totwss, betweenss = bss, size = size, iter = iter, overlaps = over),
+    class = "icmeans")
 }
 
-#' Ikmeans print
+#' Fuzzy Icmeans print
 #'
-#' Print override for ikmeans
+#' Print override for fuzzy icmeans
 #'
-#' @param x An IKmeans object.
+#' @param x An icmeans object.
 #' @param ... Other options from print.
 #'
 #' @export
-print.ikmeans <- function(x, ...) {
-  cat("Ikmeans clustering with ", length(x$size), " clusters of sizes ", paste(x$size,
-    collapse = ", "), "\n", sep = "")
+print.icmeans <- function(x, ...) {
+  cat("Fuzzy Icmeans clustering with ", length(x$size), " clusters of sizes ",
+    paste(x$size, collapse = ", "), "\n", sep = "")
   cat("\nCluster means:\n")
   print(x$centers, ...)
   cat("\nClustering vector:\n")

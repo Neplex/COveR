@@ -1,15 +1,14 @@
-#ifndef __IKMEANS_H
-#define __IKMEANS_H
+#ifndef __ICMEANS_H
+#define __ICMEANS_H
 
 #include "../helpers.h"
-#include "dists/ik_euclid.h"
-#include "dists/ik_hausdorff.h"
+#include "dists/ic_euclid.h"
 
 // ===== Functions =====
 
-void ik_assign(Interval **elements, Interval **centers, unsigned *asso,
+void ic_assign(Interval **elements, Interval **centers, double **asso,
                unsigned nb_elements, unsigned nb_clusters, unsigned nb_interval,
-               Distance dist, double *withinss) {
+               double m, Distance dist, double *withinss) {
 
   double wss[nb_clusters]; ///< New withinss
   for (size_t k = 0; k < nb_clusters; k++)
@@ -17,56 +16,83 @@ void ik_assign(Interval **elements, Interval **centers, unsigned *asso,
 
   // Assign element by element
   for (size_t i = 0; i < nb_elements; i++) {
-    double min_dist = INFINITY;
 
-    // For all clusters, get the class with the min distance
+    // For all clusters update weigth
     for (size_t k = 0; k < nb_clusters; k++) {
-      double d;
+      double dist_to_k;
+      double sum = 0;
 
       switch (dist) {
       case EUCLIDEAN:
-        d = square_distance(elements[i], centers[k], nb_interval);
+        dist_to_k = square_distance(elements[i], centers[k], nb_interval);
         break;
 
       case HAUSDORFF:
-        d = haus_distance(elements[i], centers[k], nb_interval);
+        dist_to_k = haus_distance(elements[i], centers[k], nb_interval);
         break;
       }
 
-      if (d < min_dist) {
-        min_dist = d;
-        asso[i] = k;
+      if (!dist_to_k) { // Element i equal to class k
+        asso[i][k] = 1;
+
+      } else {
+        // For all clusters
+        for (size_t l = 0; l < nb_clusters; l++) {
+          double dist_to_l;
+
+          switch (dist) {
+          case EUCLIDEAN:
+            dist_to_l = square_distance(elements[i], centers[l], nb_interval);
+            break;
+
+          case HAUSDORFF:
+            dist_to_l = haus_distance(elements[i], centers[l], nb_interval);
+            break;
+          }
+
+          if (dist_to_l) {
+            sum += pow(dist_to_k / dist_to_l, 1.0 / (m - 1));
+          } else { // Element i equal to cluster l
+            sum = 0;
+            break;
+          }
+        }
+
+        if (sum)
+          asso[i][k] = 1.0 / sum;
+        else
+          asso[i][k] = 0;
+
+        // Update withinss
+        wss[k] += dist_to_k * pow(asso[i][k], m);
       }
     }
-
-    // Update withinss
-    wss[asso[i]] += min_dist;
   }
 
   copy_array(wss, withinss, nb_clusters); // save withinss
 }
 
-void ik_update(Interval **elements, Interval **centers, unsigned *asso,
+void ic_update(Interval **elements, Interval **centers, double **asso,
                unsigned nb_elements, unsigned nb_clusters, unsigned nb_interval,
-               Distance dist, double *withinss) {
+               double m, Distance dist, double *withinss) {
 
   switch (dist) {
 
   case HAUSDORFF:
-    ik_hausdorff_update(elements, centers, asso, nb_elements, nb_clusters,
-                        nb_interval, withinss);
+    error("NOT IMPLEMENT\n");
     break;
 
   case EUCLIDEAN:
-    ik_euclid_update(elements, centers, asso, nb_elements, nb_clusters,
-                     nb_interval, withinss);
+    ic_euclid_update(elements, centers, asso, nb_elements, nb_clusters,
+                     nb_interval, m, withinss);
     break;
   }
 }
 
-double ik_getBetweenss(Interval **centers, unsigned nb_clusters,
+double ic_getBetweenss(Interval **centers, unsigned nb_clusters,
                        unsigned nb_interval, Distance dist) {
   double res = 0;
+
   // For all clusters
   for (size_t k = 0; k < nb_clusters; k++) {
 
@@ -83,8 +109,8 @@ double ik_getBetweenss(Interval **centers, unsigned nb_clusters,
         }
       }
 
-      mean[j].min /= nb_clusters;
-      mean[j].max /= nb_clusters;
+      mean[j].min /= (nb_clusters - 1);
+      mean[j].max /= (nb_clusters - 1);
     }
 
     // Sum distance
@@ -105,13 +131,14 @@ double ik_getBetweenss(Interval **centers, unsigned nb_clusters,
 // ===== I-Kmeans =====
 
 /**
- * @brief I-Kmeans (kmeans for interval data)
+ * @brief Fuzzy I-Cmeans (fuzzy cmeans for interval data)
  * @param elements the elements to compute
  * @param centers the centers of clusters
- * @param asso an unsigned array to associate elements with class
+ * @param asso an double matrix to associate element with weight in class
  * @param nb_elements the number of elements
  * @param nb_clusters the number of clusters
  * @param nb_interval the number of interval
+ * @param m the degree of fuzzification
  * @param dist the distance to use
  * @param trace show trace ?
  * @param max_iter the maximum number of iteration
@@ -120,10 +147,11 @@ double ik_getBetweenss(Interval **centers, unsigned nb_clusters,
  * @param totwss a container to return total withinss
  * @param iter a container to return the number of iteration
  */
-void ikmeans(Interval **elements, Interval **centers, unsigned *asso,
+void icmeans(Interval **elements, Interval **centers, double **asso,
              unsigned nb_elements, unsigned nb_clusters, unsigned nb_interval,
-             Distance dist, bool trace, unsigned max_iter, double *withinss,
-             double *tot, double *totwss, unsigned short *iter) {
+             double m, Distance dist, bool trace, unsigned max_iter,
+             double *withinss, double *tot, double *totwss,
+             unsigned short *iter) {
   unsigned short i = 0; ///< The current iteration
   double totwss_pre;
   *totwss = INFINITY;
@@ -133,12 +161,12 @@ void ikmeans(Interval **elements, Interval **centers, unsigned *asso,
     totwss_pre = *totwss;
 
     // Assign all elements to a class
-    ik_assign(elements, centers, asso, nb_elements, nb_clusters, nb_interval,
+    ic_assign(elements, centers, asso, nb_elements, nb_clusters, nb_interval, m,
               dist, withinss);
     double va = sum_double_array(withinss, nb_clusters);
 
     // Update all centers
-    ik_update(elements, centers, asso, nb_elements, nb_clusters, nb_interval,
+    ic_update(elements, centers, asso, nb_elements, nb_clusters, nb_interval, m,
               dist, withinss);
     *totwss = sum_double_array(withinss, nb_clusters);
 
@@ -146,7 +174,7 @@ void ikmeans(Interval **elements, Interval **centers, unsigned *asso,
 
   } while (i < max_iter && totwss_pre > *totwss); ///< While is not stable
 
-  *tot = ik_getBetweenss(centers, nb_clusters, nb_interval, dist) + *totwss;
+  *tot = ic_getBetweenss(centers, nb_clusters, nb_interval, dist) + *totwss;
   *iter = i;
 }
 
