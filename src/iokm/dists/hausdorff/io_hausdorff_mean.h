@@ -34,56 +34,6 @@ double io_hausdorff_mean_distanceToClusters(Interval *elem, Interval **centers,
   return haus_distance(elem, mean_prototype, nb_interval);
 }
 
-void swap(unsigned *index, unsigned i, unsigned j) {
-  unsigned tmp = index[i];
-  index[i] = index[j];
-  index[j] = tmp;
-}
-
-int partition(double *array, unsigned *index, int left, int right, int pivot) {
-  swap(index, pivot, right);
-  int j = left;
-  for (size_t i = left; i < right; i++) {
-    if (array[index[i]] <= array[index[right]]) {
-      swap(index, i, j);
-      j++;
-    }
-  }
-  swap(index, right, j);
-  return j;
-}
-
-void get_sort_order(double *array, unsigned *index, int left, int right) {
-  if (left < right) {
-    int pivot = (left + right) / 2;
-    pivot = partition(array, index, left, right, pivot);
-    get_sort_order(array, index, left, pivot - 1);
-    get_sort_order(array, index, pivot + 1, right);
-  }
-}
-
-double getMedian(double *b, double *z, unsigned nb_elements) {
-  unsigned index[nb_elements];
-  for (size_t i = 0; i < nb_elements; i++)
-    index[i] = i;
-
-  get_sort_order(b, index, 0, nb_elements - 1);
-
-  double sum_left = 0;
-  double sum_right = sum_double_array(z, nb_elements);
-  unsigned i;
-
-  for (i = 0; i < nb_elements; i++) {
-    sum_left += z[index[i]];
-    sum_right -= z[index[i]];
-
-    if (sum_left > sum_right)
-      break;
-  }
-
-  return b[index[i]];
-}
-
 void io_hausdorff_mean_std_update(Interval **elements, Interval **centers,
                                   bool **asso, unsigned nb_elements,
                                   unsigned nb_clusters, unsigned nb_interval,
@@ -132,8 +82,8 @@ void io_hausdorff_mean_std_update(Interval **elements, Interval **centers,
         }
       }
 
-      double c = getMedian(b1, z, nb_elem);
-      double hs = getMedian(b2, z, nb_elem);
+      double c = weighted_median(b1, z, nb_elem);
+      double hs = weighted_median(b2, z, nb_elem);
 
       if (need_valid && hs < 0)
         hs = 0;

@@ -3,6 +3,7 @@
 
 #include "../helpers.h"
 #include "dists/ic_euclid.h"
+#include "dists/ic_hausdorff.h"
 
 // ===== Functions =====
 
@@ -16,42 +17,32 @@ void ic_assign(Interval **elements, Interval **centers, double **asso,
 
   // Assign element by element
   for (size_t i = 0; i < nb_elements; i++) {
+    double dists[nb_clusters];
 
-    // For all clusters update weigth
+    // For all clusters compute distance
     for (size_t k = 0; k < nb_clusters; k++) {
-      double dist_to_k;
-      double sum = 0;
-
       switch (dist) {
       case EUCLIDEAN:
-        dist_to_k = square_distance(elements[i], centers[k], nb_interval);
+        dists[k] = square_distance(elements[i], centers[k], nb_interval);
         break;
 
       case HAUSDORFF:
-        dist_to_k = haus_distance(elements[i], centers[k], nb_interval);
+        dists[k] = haus_distance(elements[i], centers[k], nb_interval);
         break;
       }
+    }
 
-      if (!dist_to_k) { // Element i equal to class k
+    // For all clusters update weigth
+    for (size_t k = 0; k < nb_clusters; k++) {
+      double sum = 0;
+
+      if (!dists[k]) { // Element i equal to class k
         asso[i][k] = 1;
-
       } else {
         // For all clusters
         for (size_t l = 0; l < nb_clusters; l++) {
-          double dist_to_l;
-
-          switch (dist) {
-          case EUCLIDEAN:
-            dist_to_l = square_distance(elements[i], centers[l], nb_interval);
-            break;
-
-          case HAUSDORFF:
-            dist_to_l = haus_distance(elements[i], centers[l], nb_interval);
-            break;
-          }
-
-          if (dist_to_l) {
-            sum += pow(dist_to_k / dist_to_l, 1.0 / (m - 1));
+          if (dists[l]) {
+            sum += pow(dists[k] / dists[l], 1.0 / (m - 1));
           } else { // Element i equal to cluster l
             sum = 0;
             break;
@@ -64,7 +55,7 @@ void ic_assign(Interval **elements, Interval **centers, double **asso,
           asso[i][k] = 0;
 
         // Update withinss
-        wss[k] += dist_to_k * pow(asso[i][k], m);
+        wss[k] += dists[k] * pow(asso[i][k], m);
       }
     }
   }
@@ -79,7 +70,8 @@ void ic_update(Interval **elements, Interval **centers, double **asso,
   switch (dist) {
 
   case HAUSDORFF:
-    error("NOT IMPLEMENT\n");
+    ic_hausdorff_update(elements, centers, asso, nb_elements, nb_clusters,
+                        nb_interval, m, withinss);
     break;
 
   case EUCLIDEAN:
@@ -172,7 +164,8 @@ void icmeans(Interval **elements, Interval **centers, double **asso,
 
     PRINT_ITER(trace, i, va, *totwss);
 
-  } while (i < max_iter && totwss_pre > *totwss); ///< While is not stable
+  } while (i < max_iter &&
+           (totwss_pre - *totwss) > 1E-6); ///< While is not stable
 
   *tot = ic_getBetweenss(centers, nb_clusters, nb_interval, dist) + *totwss;
   *iter = i;

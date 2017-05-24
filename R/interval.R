@@ -274,7 +274,7 @@ igenerate <- function(n, ...) {
 #' @export
 measure <- function(x, min = 0, max = 1, step = 0.1) {
   if (!is.matrix(x))
-    error("x must be a numeric matrix")
+    stop("x must be a numeric matrix")
 
   seuil <- seq(min, max, step)
   overlap <- sapply(seuil, function(y) sum(x >= y)/nrow(x))

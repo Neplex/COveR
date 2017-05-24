@@ -117,7 +117,7 @@ double sum_double_array(const double *a, const size_t length) {
 }
 
 int cmpfunc(const void *a, const void *b) {
-  return (*(double *)a * 1000 - *(double *)b * 1000);
+  return (*(double *)a * 1E6 - *(double *)b * 1E6);
 }
 
 double median(double *array, unsigned length) {
@@ -126,6 +126,56 @@ double median(double *array, unsigned length) {
     return array[length / 2];
   }
   return (array[length / 2] + array[length / 2 - 1]) / 2;
+}
+
+void swap(unsigned *index, unsigned i, unsigned j) {
+  unsigned tmp = index[i];
+  index[i] = index[j];
+  index[j] = tmp;
+}
+
+int partition(double *array, unsigned *index, int left, int right, int pivot) {
+  swap(index, pivot, right);
+  int j = left;
+  for (size_t i = left; i < right; i++) {
+    if (array[index[i]] <= array[index[right]]) {
+      swap(index, i, j);
+      j++;
+    }
+  }
+  swap(index, right, j);
+  return j;
+}
+
+void get_sort_order(double *array, unsigned *index, int left, int right) {
+  if (left < right) {
+    int pivot = (left + right) / 2;
+    pivot = partition(array, index, left, right, pivot);
+    get_sort_order(array, index, left, pivot - 1);
+    get_sort_order(array, index, pivot + 1, right);
+  }
+}
+
+double weighted_median(double *b, double *z, unsigned nb_elements) {
+  unsigned index[nb_elements];
+  for (size_t i = 0; i < nb_elements; i++)
+    index[i] = i;
+
+  get_sort_order(b, index, 0, nb_elements - 1);
+
+  double sum_left = 0;
+  double sum_right = sum_double_array(z, nb_elements);
+  unsigned i;
+
+  for (i = 0; i < nb_elements; i++) {
+    sum_left += z[index[i]];
+    sum_right -= z[index[i]];
+
+    if (sum_left > sum_right)
+      break;
+  }
+
+  return b[index[i]];
 }
 
 double get_center(Interval i) { return (i.min + i.max) * .5; }
