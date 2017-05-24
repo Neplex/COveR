@@ -14,9 +14,9 @@
 #' @export
 #'
 #' @examples
-#' icmeans(iaggregate(iris, col=5), 2)
-#' icmeans(iaggregate(iris, col=5), iaggregate(iris, col=5))
-icmeans <- function(x, centers, m = 2, nstart = 10, distance = "euclid", trace = FALSE,
+#' fuzzy_icmeans(iaggregate(iris, col=5), 2)
+#' fuzzy_icmeans(iaggregate(iris, col=5), iaggregate(iris, col=5))
+fuzzy_icmeans <- function(x, centers, m = 2, nstart = 10, distance = "euclid", trace = FALSE,
   iter.max = 20) {
   nc <- 0
   c <- NULL

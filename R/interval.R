@@ -5,8 +5,7 @@
 #'
 #' @export
 is.interval <- function(x) {
-  class(x) == "interval" && length(dim(x$inter)) == 3 && dim(x$inter)[2] == 2 &&
-    is.vector(x$class)
+  class(x) == "interval" && length(dim(x$inter)) == 3 && dim(x$inter)[2] == 2
 }
 
 #' Interval data print
@@ -221,8 +220,10 @@ ibind <- function(..., class = FALSE) {
   }
 
   data <- as.interval(inter)
-  if(!is.null(row_names)) dimnames(data$inter)[[1]] <- row_names
-  if(!is.null(dim_names)) dimnames(data$inter)[[3]] <- dim_names
+  if (!is.null(row_names))
+    dimnames(data$inter)[[1]] <- row_names
+  if (!is.null(dim_names))
+    dimnames(data$inter)[[3]] <- dim_names
   data$class <- classes
 
   if (!is.interval(data))
@@ -257,4 +258,38 @@ igenerate <- function(n, ...) {
     }
 
   as.interval(data)
+}
+
+# TODO: naming
+
+#' Visualisation of overlap by seuil.
+#'
+#' Generate plot of overlap by seuil, used to help to defined the best seuil .
+#'
+#' @param x A matrix of membership degree.
+#' @param min The minimum value of degree.
+#' @param max The maximum value of degree.
+#' @param step The step of degree.
+#'
+#' @export
+measure <- function(x, min = 0, max = 1, step = 0.1) {
+  if (!is.matrix(x))
+    error("x must be a numeric matrix")
+
+  seuil <- seq(min, max, step)
+  overlap <- sapply(seuil, function(y) sum(x >= y)/nrow(x))
+
+  plot(seuil, overlap, type = "l")
+}
+
+#' Degree matrix to logical
+#'
+#' Transform a membership degree matrix into logical matrix by seuil.
+#'
+#' @param x A matrix of membership degree.
+#' @param seuil The seuil to assign over.
+#'
+#' @export
+degree2logical <- function(x, seuil = min(apply(x, 1, max))) {
+  x >= seuil
 }
