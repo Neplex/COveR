@@ -40,7 +40,7 @@ check: config
 build: config
 	$(R) -e devtools::build\(\)
 
-install: config
+install: doc
 	$(R) -e devtools::install\(\)
 
 test: config

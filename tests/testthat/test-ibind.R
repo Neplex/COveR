@@ -1,4 +1,4 @@
-library(icluster)
+library(COveR)
 
 context("ibind")
 

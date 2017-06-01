@@ -1,4 +1,4 @@
 library(testthat)
-library(icluster)
+library(COveR)
 
-test_check("icluster")
+test_check("COveR")

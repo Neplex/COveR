@@ -1,7 +1,7 @@
 #' Interval fuzzy cmeans clustering.
 #'
 #' Culster interval data with fuzzy cmeans algorithm.
-#' @useDynLib icluster R_icmeans
+#' @useDynLib COveR R_icmeans
 #'
 #' @param x An 3D interval array.
 #' @param centers A number or interval, number of cluster for clustering or pre init centers.

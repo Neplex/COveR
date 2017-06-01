@@ -1,7 +1,7 @@
 #' Interval kmeans clustering.
 #'
 #' Culster interval data with kmeans algorithm.
-#' @useDynLib icluster R_ikmeans
+#' @useDynLib COveR R_ikmeans
 #'
 #' @param x An 3D interval array.
 #' @param centers A number or interval, number of cluster for clustering or pre init centers.

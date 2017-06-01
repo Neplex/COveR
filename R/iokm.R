@@ -1,7 +1,7 @@
 #' Interval okm clustering.
 #'
 #' Culster interval data with okm algorithm.
-#' @useDynLib icluster R_iokm
+#' @useDynLib COveR R_iokm
 #'
 #' @param x An 3D interval array.
 #' @param centers A number or interval, number of cluster for clustering or pre init centers.

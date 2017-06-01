@@ -1,14 +1,14 @@
-library(icluster)
+library(COveR)
 
 context("read.interval")
 
-f1 <- system.file("extdata", "test.read.1.csv", package = "icluster")
-f2 <- system.file("extdata", "test.read.2.csv", package = "icluster")
-f3 <- system.file("extdata", "test.read.3.csv", package = "icluster")
-f4 <- system.file("extdata", "test.read.4.csv", package = "icluster")
-f5 <- system.file("extdata", "test.read.5.csv", package = "icluster")
-f6 <- system.file("extdata", "test.read.6.csv", package = "icluster")
-f7 <- system.file("extdata", "test.read.7.csv", package = "icluster")
+f1 <- system.file("extdata", "test.read.1.csv", package = "COveR")
+f2 <- system.file("extdata", "test.read.2.csv", package = "COveR")
+f3 <- system.file("extdata", "test.read.3.csv", package = "COveR")
+f4 <- system.file("extdata", "test.read.4.csv", package = "COveR")
+f5 <- system.file("extdata", "test.read.5.csv", package = "COveR")
+f6 <- system.file("extdata", "test.read.6.csv", package = "COveR")
+f7 <- system.file("extdata", "test.read.7.csv", package = "COveR")
 
 d <- as.interval(matrix(c(0, 50, 0, 50, 100, 200, 100, 200, 100, 200), nrow = 5,
   byrow = TRUE))
