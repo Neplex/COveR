@@ -1,6 +1,6 @@
 Package: icluster
 Title: Interval-Valued Data Clustering
-Version: 0.6.0
+Version: 0.6.1
 Authors@R: c(
   person("Guillaume", "Cleuziou", email = "guillaume.cleuziou@univ-orleans.fr", role = "cre"),
   person("Nicolas", "Hiot", email = "nicolas.hiot@etu.univ-orleans.fr", role = "aut"))

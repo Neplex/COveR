@@ -1,4 +1,4 @@
-#' Emotions in music aggregate to interval multi label data.
+#' Emotions in music aggregate on BPM to interval multi label data.
 #'
 #' @format A interval structure with 59 rows and 71 variables divided in min
 #' and max with 6 class:
@@ -49,36 +49,9 @@
 #' @source \url{http://mulan.sourceforge.net/datasets-mlc.html}
 "inter_emotions"
 
-#' Scene aggregate to interval multi label data.
-#'
-#' @format A interval structure with 2089 rows and 294 variables divided in min
-#' and max with 7 class:
-#' \describe{
-#'   \item{Att1}{}
-#'   \item{Att2}{}
-#'   \item{Att3}{}
-#'   ...
-#'   \item{Att292}{}
-#'   \item{Att293}{}
-#'   \item{Att294}{}
-#' }
-#'
-#' Class :
-#' \describe{
-#'   \item{Beach}{}
-#'   \item{Sunset}{}
-#'   \item{FallFoliage}{}
-#'   \item{Field}{}
-#'   \item{Mountain}{}
-#'   \item{Urban}{}
-#' }
-#'
-#' @source \url{http://mulan.sourceforge.net/datasets-mlc.html}
-"inter_scene"
-
 #' Results of a chemical analysis of wines grown in the same region in Italy but
-#' derived from three different cultivars, aggregate to interval simple label
-#' data.
+#' derived from three different cultivars, aggregate on sulfur dioxide to
+#' interval simple label data.
 #'
 #' @format A interval structure with 132 rows and 10 variables divided in min
 #' and max with 7 class:
@@ -108,38 +81,3 @@
 #'
 #' @source \url{https://archive.ics.uci.edu/ml/datasets.html}
 "inter_wine"
-
-#' Cellular Localization Sites of Proteins aggregate to interval multi label data.
-#'
-#' @format A interval structure with 2393 rows and 102 variables divided in min
-#' and max with 14 class:
-#' \describe{
-#'   \item{Att1}{}
-#'   \item{Att2}{}
-#'   \item{Att3}{}
-#'   ...
-#'   \item{Att101}{}
-#'   \item{Att102}{}
-#'   \item{Att103}{}
-#' }
-#'
-#' Class :
-#' \describe{
-#'   \item{Class1}{}
-#'   \item{Class2}{}
-#'   \item{Class3}{}
-#'   \item{Class4}{}
-#'   \item{Class5}{}
-#'   \item{Class6}{}
-#'   \item{Class7}{}
-#'   \item{Class8}{}
-#'   \item{Class9}{}
-#'   \item{Class10}{}
-#'   \item{Class11}{}
-#'   \item{Class12}{}
-#'   \item{Class13}{}
-#'   \item{Class14}{}
-#' }
-#'
-#' @source \url{http://mulan.sourceforge.net/datasets-mlc.html}
-"inter_yeast"
