@@ -14,7 +14,7 @@ DOC_DIR = man/
 TESTS_DIR = tests/
 
 # File to clean
-TRASH = $(SRC_DIR)*.so $(SRC_DIR)*.o $(DOC_DIR) *.tar.gz
+TRASH = $(SRC_DIR)*.so $(SRC_DIR)*.o *.tar.gz #$(DOC_DIR)
 
 # == MAKE COMMAND ==============================================================
 
