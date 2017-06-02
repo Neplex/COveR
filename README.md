@@ -1,3 +1,3 @@
-# icluster
+# COveR
 
-R interval-valued data clustering package
+Clustering with Overlaps in R.
