@@ -210,6 +210,18 @@ double haus_distance(const Interval *r1, const Interval *r2,
   return dist;
 }
 
+double vector_square_distance(const double *v1, const double *v2,
+                              const unsigned nb_dim) {
+  double dist = 0;
+
+  // For all dim in elements
+  for (size_t j = 0; j < nb_dim; j++) {
+    dist += sqr(v1[j] - v2[j]);
+  }
+
+  return dist;
+}
+
 // ===== Init =====
 
 // Init clusters with random values from elements
@@ -233,6 +245,32 @@ void initClusters(Interval **elements, Interval **clusters,
     t[ind] = old;
     // Set cluster values to element values
     for (size_t j = 0; j < nb_interval; j++) {
+      clusters[i][j] = e[j];
+    }
+  }
+}
+
+// Init clusters with random values from elements for non Interval data
+void initVectorClusters(double **elements, double **clusters,
+                        unsigned nb_elements, unsigned nb_clusters,
+                        unsigned nb_dim) {
+
+  // All available index
+  unsigned t[nb_elements];
+  for (size_t i = 0; i < nb_elements; i++)
+    t[i] = i;
+
+  for (size_t i = 0; i < nb_clusters; i++) {
+    // Get a random index
+    unsigned ind = range_rand(0, nb_elements - i);
+    // Get the element at this index
+    double *e = elements[t[ind]];
+    // Remove index from list (swap to the end)
+    unsigned old = t[nb_elements - i - 1];
+    t[nb_elements - i] = t[ind];
+    t[ind] = old;
+    // Set cluster values to element values
+    for (size_t j = 0; j < nb_dim; j++) {
       clusters[i][j] = e[j];
     }
   }

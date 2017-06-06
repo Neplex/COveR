@@ -41,7 +41,7 @@ int indmin(double *v1, int dim, int index) {
 
 // return the euclidean square distance between vectors v1 and v2 of dimension
 // dim
-double vector_square_distance(double *v1, double *v2, int dim) {
+double okm_square_distance(double *v1, double *v2, int dim) {
   double dd = 0.0, tmp;
   int i;
   for (i = 0; i < dim; i++) {
@@ -80,7 +80,7 @@ void compute_sq_distances(double *x, double *dist, double *cen, int *ca,
       if (ca)
         ca[c + i * k] = cl[c + i * k];
       cl[c + i * k] = 0;
-      dist[c + i * k] = vector_square_distance(&x[i * p], &cen[c * p], p);
+      dist[c + i * k] = okm_square_distance(&x[i * p], &cen[c * p], p);
     }
   }
 }
@@ -215,7 +215,7 @@ double euc_attribution(double *x, double *cen, int *cl, int *ca, int n, int p,
       // then the current cluster is associated
       // else all the other clusters are not associated and we exit the loop
       mean_2(res, &cen[idm * p], res, p, c);
-      dd2 = vector_square_distance(res, &x[i * p], p);
+      dd2 = okm_square_distance(res, &x[i * p], p);
       if (dd2 < dd1) {
         cl[i * k + idm]++;
         dd1 = dd2;
@@ -240,7 +240,7 @@ double euc_attribution(double *x, double *cen, int *cl, int *ca, int n, int p,
       for (j = 0; j < p; j++) {
         res2[j] = res2[j] / (double)count;
       }
-      dd2 = vector_square_distance(res2, &x[i * p], p);
+      dd2 = okm_square_distance(res2, &x[i * p], p);
       ret2 += dd2;
       if (dd2 < dd1) {
         for (it = 0; it < k; it++) {

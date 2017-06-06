@@ -14,7 +14,7 @@ DOC_DIR = man/
 TESTS_DIR = tests/
 
 # File to clean
-TRASH = $(SRC_DIR)*.so $(SRC_DIR)*.o *.tar.gz #$(DOC_DIR)
+TRASH = $(SRC_DIR)*.so $(SRC_DIR)*.o *.tar.gz $(DOC_DIR)
 
 # == MAKE COMMAND ==============================================================
 
@@ -34,16 +34,16 @@ config: clean
 	autoconf
 	./configure
 
-check: config
+check: doc
 	$(R) -e devtools::check\(\)
 
-build: config
+build: doc
 	$(R) -e devtools::build\(\)
 
 install: doc
 	$(R) -e devtools::install\(\)
 
-test: config
+test: doc
 	$(R) -e devtools::test\(\)
 
 doc: config
