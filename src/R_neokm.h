@@ -70,7 +70,7 @@ SEXP R_neokm(SEXP Rvec, SEXP Rx, SEXP Ry, SEXP Rnc, SEXP Ra, SEXP Rb, SEXP Rns,
 
   double **centers = new_matrix_double(nc, y);
   bool **asso = new_matrix_bool(x, nc);
-  double *withinss = new_array_double(x);
+  double *withinss = new_array_double(nc);
   double tot, totwss = INFINITY;
   unsigned short iteration = 0;
 
@@ -78,7 +78,7 @@ SEXP R_neokm(SEXP Rvec, SEXP Rx, SEXP Ry, SEXP Rnc, SEXP Ra, SEXP Rb, SEXP Rns,
   for (j = 0; j < ns; j++) {
     double **c = new_matrix_double(nc, y);
     bool **a = new_matrix_bool(x, nc);
-    double *w = new_array_double(x);
+    double *w = new_array_double(nc);
     double to, tw;
     unsigned short i;
 
@@ -95,7 +95,7 @@ SEXP R_neokm(SEXP Rvec, SEXP Rx, SEXP Ry, SEXP Rnc, SEXP Ra, SEXP Rb, SEXP Rns,
     if (tw < totwss) {
       copy_matrix(c, centers, nc, y);
       copy_matrix(a, asso, x, nc);
-      copy_array(w, withinss, x);
+      copy_array(w, withinss, nc);
       tot = to;
       totwss = tw;
       iteration = i;
@@ -122,8 +122,8 @@ SEXP R_neokm(SEXP Rvec, SEXP Rx, SEXP Ry, SEXP Rnc, SEXP Ra, SEXP Rb, SEXP Rns,
 
   PROTECT(Rtot = ScalarReal(tot));
 
-  PROTECT(Rwss = NEW_NUMERIC(x));
-  for (i = 0; i < x; i++)
+  PROTECT(Rwss = NEW_NUMERIC(nc));
+  for (i = 0; i < nc; i++)
     REAL(Rwss)[i] = withinss[i];
 
   PROTECT(Rtotwss = ScalarReal(totwss));

@@ -17,7 +17,7 @@
 #' @examples
 #' neokm(iris[,-5], 3)
 #' neokm(iris[,-5], 3, 1, 2)
-neokm <- function(x, centers, alpha = 0.1, beta = 0.005, nstart = 10, distance = "euclid",
+neokm <- function(x, centers, alpha = 0.3, beta = 0.05, nstart = 10, distance = "euclid",
   trace = FALSE, iter.max = 20) {
 
   nc <- 0
@@ -36,7 +36,7 @@ neokm <- function(x, centers, alpha = 0.1, beta = 0.005, nstart = 10, distance =
 
   } else if (is.numeric(centers) || is.data.frame(centers) || is.matrix(centers) ||
     is.vector(centers)) {
-    centers <- as.matrix(centers)
+    centers <- as.matrix(data.matrix(centers))
     nc <- nrow(centers)
     c <- as.numeric(as.vector(centers))
     if (ncol(centers) != ncol(x))
@@ -107,7 +107,7 @@ print.neokm <- function(x, ...) {
   print(x$centers, ...)
   cat("\nClustering matrix:\n")
   print(x$cluster, ...)
-  cat("\nWithin cluster sum of squares by elements:\n")
+  cat("\nWithin cluster sum of squares by cluster:\n")
   print(x$withinss, ...)
   cat(sprintf(" (between_SS / total_SS = %5.1f %%)\n", 100 * x$betweenss/x$totss),
     "Available components:\n", sep = "\n")

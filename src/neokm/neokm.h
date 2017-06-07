@@ -9,31 +9,13 @@ double neo_withinss(double **elements, double **centers, bool **asso,
                     unsigned nb_elements, unsigned nb_clusters, unsigned nb_dim,
                     double *withinss) {
 
-  // For all elements
-  for (size_t i = 0; i < nb_elements; i++) {
-    double mean_prototype[nb_dim];
-
-    // For all intervals
-    for (size_t j = 0; j < nb_dim; j++) {
-      mean_prototype[j] = 0;
-      unsigned nbc = 0;
-
-      // For all associated clusters
-      for (size_t k = 0; k < nb_clusters; k++) {
-        if (asso[i][k]) {
-          mean_prototype[j] += centers[k][j];
-          nbc++;
-        }
-      }
-
-      if (nbc) { // If the element have associated clusters
-        mean_prototype[j] /= nbc;
-      } else { // If the element have no cluster
-        mean_prototype[j] = INFINITY;
+  for (size_t k = 0; k < nb_clusters; k++) {
+    withinss[k] = 0;
+    for (size_t i = 0; i < nb_elements; i++) {
+      if (asso[i][k]) {
+        withinss[k] += vector_square_distance(elements[i], centers[k], nb_dim);
       }
     }
-
-    withinss[i] = vector_square_distance(elements[i], mean_prototype, nb_dim);
   }
 }
 
