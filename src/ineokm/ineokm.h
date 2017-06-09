@@ -1,30 +1,37 @@
-#ifndef __NEOKM_H
-#define __NEOKM_H
+#ifndef __INEOKM_H
+#define __INEOKM_H
 
 #include "../helpers.h"
 
 // == Betwennss ==
 
-double neo_betweenss(double **centers, unsigned nb_clusters, unsigned nb_dim) {
+double ineo_betweenss(Interval **centers, unsigned nb_clusters,
+                      unsigned nb_interval) {
 
   double res = 0;
 
   // For all clusters
   for (size_t k = 0; k < nb_clusters; k++) {
 
-    // Get the mean element of other clusters center
-    double mean[nb_dim];
-    for (size_t j = 0; j < nb_dim; j++) {
+    // Get the mean element of other centers
+    Interval mean[nb_interval];
+    for (size_t j = 0; j < nb_interval; j++) {
+      mean[j].min = 0;
+      mean[j].max = 0;
+
       for (size_t i = 0; i < nb_clusters; i++) {
         if (i != k) {
-          mean[j] += centers[i][j];
+          mean[j].min += centers[i][j].min;
+          mean[j].max += centers[i][j].max;
         }
       }
-      mean[j] /= nb_clusters;
+
+      mean[j].min /= nb_clusters;
+      mean[j].max /= nb_clusters;
     }
 
     // Sum distance
-    res += vector_square_distance(centers[k], mean, nb_dim);
+    res += square_distance(centers[k], mean, nb_interval);
   }
 
   return res;
@@ -32,9 +39,10 @@ double neo_betweenss(double **centers, unsigned nb_clusters, unsigned nb_dim) {
 
 // == Assign & Update ==
 
-void neo_assign(double **elements, double **centers, bool **asso,
-                unsigned nb_elements, unsigned nb_clusters, unsigned nb_dim,
-                double alpha, double beta, double *withinss) {
+void ineo_assign(Interval **elements, Interval **centers, bool **asso,
+                 unsigned nb_elements, unsigned nb_clusters,
+                 unsigned nb_interval, double alpha, double beta,
+                 double *withinss) {
 
   // Clear withinss
   for (size_t k = 0; k < nb_clusters; k++) {
@@ -45,7 +53,7 @@ void neo_assign(double **elements, double **centers, bool **asso,
   double dists[nb_elements][nb_clusters];
   for (size_t i = 0; i < nb_elements; i++) {
     for (size_t k = 0; k < nb_clusters; k++) {
-      dists[i][k] = vector_square_distance(elements[i], centers[k], nb_dim);
+      dists[i][k] = square_distance(elements[i], centers[k], nb_interval);
     }
   }
 
@@ -105,55 +113,58 @@ void neo_assign(double **elements, double **centers, bool **asso,
   }
 }
 
-void neo_update(double **elements, double **centers, bool **asso,
-                unsigned nb_elements, unsigned nb_clusters, unsigned nb_dim,
-                double *withinss) {
+void ineo_update(Interval **elements, Interval **centers, bool **asso,
+                 unsigned nb_elements, unsigned nb_clusters,
+                 unsigned nb_interval, double *withinss) {
 
-  // Update cluster by cluster
+  // Update class by class
   for (size_t k = 0; k < nb_clusters; k++) {
-    withinss[k] = 0;
+    withinss[k] = 0; ///< withinss inside class k
 
-    // Update dim by dim
-    for (size_t j = 0; j < nb_dim; j++) {
+    // For all intervals compute mean of all elements in class
+    for (size_t j = 0; j < nb_interval; j++) {
+      double min = 0;
+      double max = 0;
+      unsigned nb_elem = 0; ///< Nb elem in cluster k
 
-      double sum = 0;       ///< The sum of elements in cluster k
-      unsigned nb_elem = 0; ///< The Number of elements in cluster k
-
-      // For all elemets in cluster k
+      // For elements in class
       for (size_t i = 0; i < nb_elements; i++) {
         if (asso[i][k]) {
 
-          sum += elements[i][j];
+          Interval r = elements[i][j];
+          min += r.min;
+          max += r.max;
           nb_elem++;
         }
       }
 
-      // Update center
-      centers[k][j] = (nb_elem) ? sum / nb_elem : NAN;
+      if (nb_elem) { // If is not empty, update to mean of elements in it
+        centers[k][j].min = min / nb_elem;
+        centers[k][j].max = max / nb_elem;
+      } else { // If is empty, remove class
+        centers[k][j].min = centers[k][j].max = NAN;
+      }
     }
 
     // Update withinss
     for (size_t i = 0; i < nb_elements; i++) {
       if (asso[i][k]) {
-        withinss[k] += vector_square_distance(elements[i], centers[k], nb_dim);
+        withinss[k] += square_distance(elements[i], centers[k], nb_interval);
       }
     }
   }
 }
 
-// == NEOKM ==
+// == I-NEOKM ==
 
 /**
- * @brief NEOKM (Non-exhaustive overlapping kmeans)
+ * @brief I-NEOKM (NEOKM for interval data)
  * @param elements the elements to compute
  * @param centers the centers of clusters
- * @param asso an boolean matrix to associate element with class
+ * @param asso an unsigned array to associate elements with class
  * @param nb_elements the number of elements
  * @param nb_clusters the number of clusters
- * @param nb_dim the number of dim
- * @param alpha (overlap)
- * @param beta (non-exhaustiveness)
- * @param dist the distance to use
+ * @param nb_interval the number of interval
  * @param trace show trace ?
  * @param max_iter the maximum number of iteration
  * @param withinss a container to return withinss
@@ -161,11 +172,11 @@ void neo_update(double **elements, double **centers, bool **asso,
  * @param totwss a container to return total withinss
  * @param iter a container to return the number of iteration
  */
-void neokm(double **elements, double **centers, bool **asso,
-           unsigned nb_elements, unsigned nb_clusters, unsigned nb_dim,
-           double alpha, double beta, bool trace, unsigned max_iter,
-           double *withinss, double *tot, double *totwss,
-           unsigned short *iter) {
+void ineokm(Interval **elements, Interval **centers, bool **asso,
+            unsigned nb_elements, unsigned nb_clusters, unsigned nb_interval,
+            double alpha, double beta, bool trace, unsigned max_iter,
+            double *withinss, double *tot, double *totwss,
+            unsigned short *iter) {
 
   unsigned short i = 0; ///< The current iteration
   double totwss_pre;
@@ -176,20 +187,20 @@ void neokm(double **elements, double **centers, bool **asso,
     totwss_pre = *totwss;
 
     // Assign all elements to a class
-    neo_assign(elements, centers, asso, nb_elements, nb_clusters, nb_dim, alpha,
-               beta, withinss);
+    ineo_assign(elements, centers, asso, nb_elements, nb_clusters, nb_interval,
+                alpha, beta, withinss);
     double va = sum_double_array(withinss, nb_clusters);
 
     // Update all centers
-    neo_update(elements, centers, asso, nb_elements, nb_clusters, nb_dim,
-               withinss);
+    ineo_update(elements, centers, asso, nb_elements, nb_clusters, nb_interval,
+                withinss);
     *totwss = sum_double_array(withinss, nb_clusters);
 
     PRINT_ITER(trace, i, va, *totwss);
 
   } while (i < max_iter && totwss_pre > *totwss); ///< While is not stable
 
-  *tot = *totwss + neo_betweenss(centers, nb_clusters, nb_dim);
+  *tot = *totwss + ineo_betweenss(centers, nb_clusters, nb_interval);
   *iter = i;
 }
 

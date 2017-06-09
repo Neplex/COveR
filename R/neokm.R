@@ -8,7 +8,6 @@
 #' @param alpha A number (overlap).
 #' @param beta A number (non-exhaustiveness).
 #' @param nstart A number, number of execution to find the best result.
-#' @param distance A string ('euclid': Euclidian distance, 'hausdorff': Hausdorff distance).
 #' @param trace A boolean, tracing information on the progress of the algorithm is produced.
 #' @param iter.max the maximum number of iterations allowed.
 #'
@@ -16,9 +15,9 @@
 #'
 #' @examples
 #' neokm(iris[,-5], 3)
-#' neokm(iris[,-5], 3, 1, 2)
-neokm <- function(x, centers, alpha = 0.3, beta = 0.05, nstart = 10, distance = "euclid",
-  trace = FALSE, iter.max = 20) {
+#' neokm(iris[,-5], iris[,-5], 1, 2)
+neokm <- function(x, centers, alpha = 0.3, beta = 0.05, nstart = 10, trace = FALSE,
+  iter.max = 20) {
 
   nc <- 0
   c <- NULL
@@ -55,9 +54,6 @@ neokm <- function(x, centers, alpha = 0.3, beta = 0.05, nstart = 10, distance = 
   if (nstart <= 0)
     stop("nstart must be positive")
 
-  if (!is.character(distance))
-    stop("distance must be character")
-
   if (!is.logical(trace))
     stop("trace must be logical")
 
@@ -67,13 +63,9 @@ neokm <- function(x, centers, alpha = 0.3, beta = 0.05, nstart = 10, distance = 
     stop("iter.max must be positive")
 
 
-  # Distance
-  dist <- match(distance, c("euclid", "hausdorff")) - 1
-
-
   v <- as.numeric(as.vector(data.matrix(x)))
-  c <- .Call(R_neokm, v, nrow(x), ncol(x), nc, alpha, beta, nstart, dist, trace,
-    iter.max, c)
+  c <- .Call(R_neokm, v, nrow(x), ncol(x), nc, alpha, beta, nstart, trace, iter.max,
+    c)
 
 
   cluster <- data.matrix(c[[1]])

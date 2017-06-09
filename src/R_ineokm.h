@@ -2,15 +2,16 @@
 This file is used to make interface between R and C code (C code is independant)
 */
 
-#include "neokm/neokm.h"
+#include "ineokm/ineokm.h"
 
 // ===== Function =====
 
 /**
- * @brief Interface between R and C code for neokm
- * @param Rvec the R vector of data
+ * @brief Interface between R and C code for ineokm
+ * @param Rdata the R vector of data
  * @param Rx the number of elements (dim x)
- * @param Ry the number of dimentions (dim y)
+ * @param Ry the number of values (dim y), always 2 (min, max)
+ * @param Rz the number of intervals (dim y)
  * @param Rnc the number of wanted clusters
  * @param Ra alpha (overlap)
  * @param Rb beta (non-exhaustiveness)
@@ -20,25 +21,26 @@ This file is used to make interface between R and C code (C code is independant)
  * @param Rcent the generate centers
  * @return a R list with results
  */
-SEXP R_neokm(SEXP Rvec, SEXP Rx, SEXP Ry, SEXP Rnc, SEXP Ra, SEXP Rb, SEXP Rns,
-             SEXP Rt, SEXP Rim, SEXP Rcent) {
+SEXP R_ineokm(SEXP Rdata, SEXP Rx, SEXP Ry, SEXP Rz, SEXP Rnc, SEXP Ra, SEXP Rb,
+              SEXP Rns, SEXP Rt, SEXP Rim, SEXP Rcent) {
 
-  unsigned n, x, y, nc, ns, im, i, j;
+  unsigned n, x, y, z, nc, ns, im, i, j;
   double alpha, beta;
   bool t, pre_init = false;
   double *data_vec, *centers_vec;
   SEXP Rcluster, Rcenters, Rtot, Rwss, Rtotwss, Riter, Rlist;
 
   // R types to C types
-  data_vec = NUMERIC_POINTER(Rvec);  // Data vector (elements)
-  n = (unsigned)GET_LENGTH(Rvec);    // Length of data vector
+  data_vec = NUMERIC_POINTER(Rdata); // Data vector (elements)
+  n = (unsigned)GET_LENGTH(Rdata);   // Length of data vector
   x = (unsigned)INTEGER_VALUE(Rx);   // First dim size
   y = (unsigned)INTEGER_VALUE(Ry);   // Second dim size
+  z = (unsigned)INTEGER_VALUE(Rz);   // Third dim size
   nc = (unsigned)INTEGER_VALUE(Rnc); // Number of clusters
   alpha = (double)NUMERIC_VALUE(Ra); // Alpha
   beta = (double)NUMERIC_VALUE(Rb);  // Beta
   ns = (unsigned)INTEGER_VALUE(Rns); // Nb of execution to find the best result
-  t = (bool)LOGICAL_VALUE(Rt);       // Trace
+  t = (unsigned)LOGICAL_VALUE(Rt);   // Trace
   im = (unsigned)INTEGER_VALUE(Rim); // Nb of maximum iteration
 
   // Pre generate centers
@@ -49,49 +51,51 @@ SEXP R_neokm(SEXP Rvec, SEXP Rx, SEXP Ry, SEXP Rnc, SEXP Ra, SEXP Rb, SEXP Rns,
   }
 
   // Transform the data vector to an Intervall 2D array
-  double **elements = new_matrix_double(x, y);
+  Interval **elements = new_matrix_Interval(x, z);
   for (i = 0; i < x; i++) {
-    for (j = 0; j < y; j++) {
-      elements[i][j] = data_vec[i + j * x];
+    for (j = 0; j < z; j++) {
+      elements[i][j].min = data_vec[i + j * 2 * x];
+      elements[i][j].max = data_vec[i + j * 2 * x + x];
     }
   }
 
   // Transform the centers vector to an Intervall 2D array
-  double centers_init[nc][y];
+  Interval centers_init[nc][z];
   if (pre_init) {
     for (i = 0; i < nc; i++) {
-      for (j = 0; j < y; j++) {
-        centers_init[i][j] = centers_vec[i + j * 2 * nc];
+      for (j = 0; j < z; j++) {
+        centers_init[i][j].min = centers_vec[i + j * 2 * nc];
+        centers_init[i][j].max = centers_vec[i + j * 2 * nc + nc];
       }
     }
   }
 
-  double **centers = new_matrix_double(nc, y);
+  Interval **centers = new_matrix_Interval(nc, z);
   bool **asso = new_matrix_bool(x, nc);
   double *withinss = new_array_double(nc);
   double tot, totwss = INFINITY;
   unsigned short iteration = 0;
 
-  // Execute neokm
+  // Execute ineokm
   for (j = 0; j < ns; j++) {
-    double **c = new_matrix_double(nc, y);
+    Interval **c = new_matrix_Interval(nc, z);
     bool **a = new_matrix_bool(x, nc);
     double *w = new_array_double(nc);
     double to, tw;
     unsigned short i;
 
-    PRINT_START(t, "neokm", j);
+    PRINT_START(t, "ineokm", j);
 
     if (pre_init) {
-      copy_matrix(centers_init, c, nc, y);
+      copy_matrix(centers_init, c, nc, z);
     } else {
-      initVectorClusters(elements, c, x, nc, y);
+      initClusters(elements, c, x, nc, z);
     }
 
-    neokm(elements, c, a, x, nc, y, alpha, beta, t, im, w, &to, &tw, &i);
+    ineokm(elements, c, a, x, nc, z, alpha, beta, t, im, w, &to, &tw, &i);
 
     if (tw < totwss) {
-      copy_matrix(c, centers, nc, y);
+      copy_matrix(c, centers, nc, z);
       copy_matrix(a, asso, x, nc);
       copy_array(w, withinss, nc);
       tot = to;
@@ -113,10 +117,13 @@ SEXP R_neokm(SEXP Rvec, SEXP Rx, SEXP Ry, SEXP Rnc, SEXP Ra, SEXP Rb, SEXP Rns,
     for (j = 0; j < nc; j++)
       LOGICAL(Rcluster)[i + j * x] = asso[i][j];
 
-  PROTECT(Rcenters = allocMatrix(REALSXP, nc, y));
-  for (i = 0; i < nc; i++)
-    for (j = 0; j < y; j++)
-      REAL(Rcenters)[i + j * nc] = centers[i][j];
+  PROTECT(Rcenters = alloc3DArray(REALSXP, nc, 2, z));
+  for (i = 0; i < nc; i++) {
+    for (j = 0; j < z; j++) {
+      REAL(Rcenters)[i + j * 2 * nc] = centers[i][j].min;
+      REAL(Rcenters)[i + j * 2 * nc + nc] = centers[i][j].max;
+    }
+  }
 
   PROTECT(Rtot = ScalarReal(tot));
 
