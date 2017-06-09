@@ -81,3 +81,24 @@
 #'
 #' @source \url{https://archive.ics.uci.edu/ml/datasets.html}
 "inter_wine"
+
+#' Temperature by month and humidity in european city.
+#'
+#' @format A interval structure with 68 rows and 13 variables divided in min
+#' and max with 1 class:
+#' \describe{
+#'   \item{temp.jan}{}
+#'   \item{temp.fev}{}
+#'   \item{temp.mars}{}
+#'   \item{temp.avr}{}
+#'   \item{temp.mai}{}
+#'   \item{temp.juin}{}
+#'   \item{temp.juil}{}
+#'   \item{temp.aout}{}
+#'   \item{temp.sep}{}
+#'   \item{temp.oct}{}
+#'   \item{temp.nov}{}
+#'   \item{temp.dec}{}
+#'   \item{humid}{}
+#' }
+"inter_city"
