@@ -85,7 +85,7 @@
 #' Temperature by month and humidity in european city.
 #'
 #' @format A interval structure with 68 rows and 13 variables divided in min
-#' and max with 1 class:
+#' and max with 17 class:
 #' \describe{
 #'   \item{temp.jan}{}
 #'   \item{temp.fev}{}
@@ -100,5 +100,26 @@
 #'   \item{temp.nov}{}
 #'   \item{temp.dec}{}
 #'   \item{humid}{}
+#' }
+#'
+#' Class :
+#' \describe{
+#'   \item{Allemagne}{}
+#'   \item{Angleterre}{}
+#'   \item{Autriche}{}
+#'   \item{Belgique}{}
+#'   \item{Bulgarie}{}
+#'   \item{Croatie}{}
+#'   \item{Danemark}{}
+#'   \item{Espagne}{}
+#'   \item{France}{}
+#'   \item{Italie}{}
+#'   \item{Pays-Bas}{}
+#'   \item{Pologne}{}
+#'   \item{Portugal}{}
+#'   \item{Roumanie}{}
+#'   \item{Russie}{}
+#'   \item{Turquie}{}
+#'   \item{Ukraine}{}
 #' }
 "inter_city"

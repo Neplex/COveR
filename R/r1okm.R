@@ -1,0 +1,104 @@
+#' r1okm clustering.
+#'
+#' Culster data with r1okm algorithm.
+#' @useDynLib COveR R_r1okm
+#'
+#' @param x An data matrix.
+#' @param centers A number, number of cluster for clustering or pre init centers.
+#' @param alpha A number.
+#' @param nstart A number, number of execution to find the best result.
+#' @param trace A boolean, tracing information on the progress of the algorithm is produced.
+#' @param iter.max the maximum number of iterations allowed.
+#'
+#' @export
+#'
+#' @examples
+#' r1okm(iris[,-5], 3)
+#' r1okm(iris[,-5], 3, -0.5)
+#' r1okm(iris[,-5], iris[,-5], 1)
+r1okm <- function(x, centers, alpha = 0, nstart = 10, trace = FALSE, iter.max = 20) {
+
+  nc <- 0
+  c <- NULL
+
+  # Arguments check
+  if (!is.data.frame(x) && !is.matrix(x) && !is.numeric(x))
+    stop("Data must be numeric matrix")
+
+  if (is.double(centers)) {
+    if (centers > 0 && centers <= nrow(x)) {
+      nc <- centers
+    } else {
+      stop("The number of clusters must be between 1 and number of row")
+    }
+
+  } else if (is.numeric(centers) || is.data.frame(centers) || is.matrix(centers) ||
+    is.vector(centers)) {
+    centers <- as.matrix(data.matrix(centers))
+    nc <- nrow(centers)
+    c <- as.numeric(as.vector(centers))
+    if (ncol(centers) != ncol(x))
+      stop("x and centers must have the same number of dimensions")
+
+  } else stop("centers must be double, vector or matrix")
+
+  if (!is.numeric(alpha))
+    stop("alpha must be numeric")
+
+  if (!is.numeric(nstart))
+    stop("nstart must be numeric")
+  if (nstart <= 0)
+    stop("nstart must be positive")
+
+  if (!is.logical(trace))
+    stop("trace must be logical")
+
+  if (!is.numeric(iter.max))
+    stop("iter.max must be numeric")
+  if (iter.max <= 0)
+    stop("iter.max must be positive")
+
+
+  v <- as.numeric(as.vector(data.matrix(x)))
+  c <- .Call(R_r1okm, v, nrow(x), ncol(x), nc, alpha, nstart, trace, iter.max,
+    c)
+
+
+  cluster <- data.matrix(c[[1]])
+  centers <- data.matrix(c[[2]])
+  totss <- c[[3]]
+  wss <- c[[4]]
+  totwss <- c[[5]]
+  bss <- totss - totwss
+  size <- colSums(cluster)
+  iter <- c[[6]]
+  over <- mean(rowSums(cluster))
+
+  # Result
+  structure(list(cluster = cluster, centers = centers, totss = totss, withinss = wss,
+    tot.withinss = totwss, betweenss = bss, size = size, iter = iter, overlaps = over),
+    class = "r1okm")
+}
+
+#' NEOKM print
+#'
+#' Print override for NEOKM
+#'
+#' @param x An NEOKM object.
+#' @param ... Other options from print.
+#'
+#' @export
+print.r1okm <- function(x, ...) {
+  cat("NEOKM clustering with ", length(x$size), " clusters of sizes ", paste(x$size,
+    collapse = ", "), "\n", sep = "")
+  cat("\nCluster means:\n")
+  print(x$centers, ...)
+  cat("\nClustering matrix:\n")
+  print(x$cluster, ...)
+  cat("\nWithin cluster sum of squares by cluster:\n")
+  print(x$withinss, ...)
+  cat(sprintf(" (between_SS / total_SS = %5.1f %%)\n", 100 * x$betweenss/x$totss),
+    "Available components:\n", sep = "\n")
+  print(names(x))
+  invisible(x)
+}

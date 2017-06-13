@@ -6,4 +6,5 @@
 
 // Classic clustering
 #include "R_neokm.h"
+#include "R_r1okm.h"
 #include "okm/okm.h"

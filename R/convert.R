@@ -1,5 +1,5 @@
 .onUnload <- function(libpath) {
-  library.dynam.unload("icluster", libpath)
+  library.dynam.unload("COveR", libpath)
 }
 
 # Interval to R object =========================================================

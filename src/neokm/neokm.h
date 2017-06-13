@@ -153,7 +153,6 @@ void neo_update(double **elements, double **centers, bool **asso,
  * @param nb_dim the number of dim
  * @param alpha (overlap)
  * @param beta (non-exhaustiveness)
- * @param dist the distance to use
  * @param trace show trace ?
  * @param max_iter the maximum number of iteration
  * @param withinss a container to return withinss
