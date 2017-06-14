@@ -1,11 +1,11 @@
-#' r1okm clustering.
+#' r2okm clustering.
 #'
-#' Culster data with r1okm algorithm.
-#' @useDynLib COveR R_r1okm
+#' Culster data with r2okm algorithm.
+#' @useDynLib COveR R_r2okm
 #'
 #' @param x An data matrix.
 #' @param centers A number, number of cluster for clustering or pre init centers.
-#' @param alpha A number.
+#' @param lambda A number.
 #' @param nstart A number, number of execution to find the best result.
 #' @param trace A boolean, tracing information on the progress of the algorithm is produced.
 #' @param iter.max the maximum number of iterations allowed.
@@ -13,10 +13,10 @@
 #' @export
 #'
 #' @examples
-#' r1okm(iris[,-5], 3)
-#' r1okm(iris[,-5], 3, -0.5)
-#' r1okm(iris[,-5], iris[,-5], 1)
-r1okm <- function(x, centers, alpha = 0, nstart = 10, trace = FALSE, iter.max = 20) {
+#' r2okm(iris[,-5], 3)
+#' r2okm(iris[,-5], 3, -0.5)
+#' r2okm(iris[,-5], iris[,-5], 1)
+r2okm <- function(x, centers, lambda = 0, nstart = 10, trace = FALSE, iter.max = 20) {
 
   nc <- 0
   c <- NULL
@@ -43,8 +43,8 @@ r1okm <- function(x, centers, alpha = 0, nstart = 10, trace = FALSE, iter.max = 
 
   } else stop("centers must be double, vector or matrix")
 
-  if (!is.numeric(alpha))
-    stop("alpha must be numeric")
+  if (!is.numeric(lambda))
+    stop("lambda must be numeric")
 
   if (!is.numeric(nstart))
     stop("nstart must be numeric")
@@ -61,7 +61,7 @@ r1okm <- function(x, centers, alpha = 0, nstart = 10, trace = FALSE, iter.max = 
 
 
   v <- as.numeric(as.vector(data.matrix(x)))
-  c <- .Call(R_r1okm, v, nrow(x), ncol(x), nc, alpha, nstart, trace, iter.max,
+  c <- .Call(R_r2okm, v, nrow(x), ncol(x), nc, lambda, nstart, trace, iter.max,
     c)
 
 
@@ -78,18 +78,18 @@ r1okm <- function(x, centers, alpha = 0, nstart = 10, trace = FALSE, iter.max = 
   # Result
   structure(list(cluster = cluster, centers = centers, totss = totss, withinss = wss,
     tot.withinss = totwss, betweenss = bss, size = size, iter = iter, overlaps = over),
-    class = "r1okm")
+    class = "r2okm")
 }
 
-#' R1-OKM print
+#' R2-OKM print
 #'
-#' Print override for R1-OKM
+#' Print override for R2-OKM
 #'
 #' @param x An NEOKM object.
 #' @param ... Other options from print.
 #'
 #' @export
-print.r1okm <- function(x, ...) {
+print.r2okm <- function(x, ...) {
   cat("NEOKM clustering with ", length(x$size), " clusters of sizes ", paste(x$size,
     collapse = ", "), "\n", sep = "")
   cat("\nCluster means:\n")
