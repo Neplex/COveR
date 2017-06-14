@@ -1,10 +1,10 @@
 // Interval clustering
-#include "R_icmeans.h"
-#include "R_ikmeans.h"
-#include "R_ineokm.h"
-#include "R_iokm.h"
+#include "icmeans/R_icmeans.h"
+#include "ikmeans/R_ikmeans.h"
+#include "ineokm/R_ineokm.h"
+#include "iokm/R_iokm.h"
 
 // Classic clustering
-#include "R_neokm.h"
-#include "R_r1okm.h"
+#include "neokm/R_neokm.h"
 #include "okm/okm.h"
+#include "r1okm/R_r1okm.h"

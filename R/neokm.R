@@ -26,7 +26,7 @@ neokm <- function(x, centers, alpha = 0.3, beta = 0.05, nstart = 10, trace = FAL
   if (!is.data.frame(x) && !is.matrix(x) && !is.numeric(x))
     stop("Data must be numeric matrix")
 
-  if (is.double(centers)) {
+  if (length(centers) == 1) {
     if (centers > 0 && centers <= nrow(x)) {
       nc <- centers
     } else {

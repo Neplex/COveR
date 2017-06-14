@@ -25,7 +25,7 @@ r1okm <- function(x, centers, alpha = 0, nstart = 10, trace = FALSE, iter.max = 
   if (!is.data.frame(x) && !is.matrix(x) && !is.numeric(x))
     stop("Data must be numeric matrix")
 
-  if (is.double(centers)) {
+  if (length(centers) == 1) {
     if (centers > 0 && centers <= nrow(x)) {
       nc <- centers
     } else {
@@ -37,6 +37,7 @@ r1okm <- function(x, centers, alpha = 0, nstart = 10, trace = FALSE, iter.max = 
     centers <- as.matrix(data.matrix(centers))
     nc <- nrow(centers)
     c <- as.numeric(as.vector(centers))
+    print(c)
     if (ncol(centers) != ncol(x))
       stop("x and centers must have the same number of dimensions")
 

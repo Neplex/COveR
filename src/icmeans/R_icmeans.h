@@ -2,7 +2,7 @@
 This file is used to make interface between R and C code (C code is independant)
 */
 
-#include "icmeans/icmeans.h"
+#include "icmeans.h"
 
 // ===== Function =====
 
