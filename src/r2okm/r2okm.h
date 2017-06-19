@@ -35,25 +35,34 @@ double r2_betweenss(double **centers, unsigned nb_clusters, unsigned nb_dim) {
 double r2_distanceToClusters(double *elem, double **centers, bool *asso,
                              unsigned nb_clusters, unsigned nb_dim,
                              double lambda) {
-  double mean_prototype[nb_dim]
+  double mean_prototype[nb_dim];
+  double tmp = 0.0;
+  unsigned nbc = 0;
 
-      // For all dim
-      for (size_t j = 0; j < nb_dim; j++) {
+  // Compute the sum of distance between element and all asociate cluster
+  for (size_t k = 0; k < nb_clusters; k++) {
+    if (asso[k]) {
+      nbc++;
+      tmp += vector_square_distance(elem, centers[k], nb_dim);
+    }
+  }
+
+  // Compute the mean prototype og associate cluster
+  for (size_t j = 0; j < nb_dim; j++) {
     mean_prototype[j] = 0;
-    unsigned nbc = 0;
 
     // For all associated clusters
     for (size_t k = 0; k < nb_clusters; k++) {
       if (asso[k]) {
         mean_prototype[j] += centers[k][j];
-        nbc++;
       }
     }
 
     mean_prototype[j] = (nbc) ? mean_prototype[j] / nbc : INFINITY;
   }
 
-  return vector_square_distance(elem, mean_prototype, nb_dim);
+  return vector_square_distance(elem, mean_prototype, nb_dim) +
+         lambda * (tmp / nbc);
 }
 
 void r2_assign(double **elements, double **centers, bool **asso,
@@ -123,56 +132,49 @@ void r2_update(double **elements, double **centers, bool **asso,
                unsigned nb_elements, unsigned nb_clusters, unsigned nb_dim,
                double lambda, double *withinss) {
 
-  // Get number of associate clusters by elements
+  // Get number of associate clusters by elements and compute weight
   unsigned nb_asso[nb_elements];
+  double weight[nb_elements];
+  double penality[nb_elements];
   for (size_t i = 0; i < nb_elements; i++) {
     nb_asso[i] = 0;
-    for (size_t j = 0; j < nb_clusters; j++) {
-      nb_asso[i] += asso[i][j];
+    for (size_t k = 0; k < nb_clusters; k++) {
+      nb_asso[i] += asso[i][k];
     }
+    weight[i] = 1.0 / (double)sqr(nb_asso[i]);
+    penality[i] = lambda / nb_asso[i];
   }
 
   // Update cluster by cluster
   for (size_t k = 0; k < nb_clusters; k++) {
-    double res = 0; ///< Sum of weight
 
-    // New center for cluster k
-    double center[nb_dim];
+    // Update dim by dim
     for (size_t j = 0; j < nb_dim; j++) {
-      center[j] = 0;
-    }
+      double res = 0.0;
+      double ws = 0.0;
 
-    // For all elements in cluster
-    for (size_t i = 0; i < nb_elements; i++) {
-      if (asso[i][k]) {
+      // For all elements in cluster
+      for (size_t i = 0; i < nb_elements; i++) {
+        if (asso[i][k]) {
+          double tmp = elements[i][j];
 
-        double weight = 1.0 / sqr(nb_asso[i]);
-        res += weight;
-
-        double copy[nb_dim];
-        copy_array(elements[i], copy, nb_dim);
-
-        for (size_t j = 0; j < nb_dim; j++) {
-          copy[j] *= nb_asso[i];
-
+          // Compute x^i
+          tmp *= nb_asso[i];
           for (size_t l = 0; l < nb_clusters; l++) {
             if (asso[i][l] && l != k) {
-              copy[j] -= centers[l][j];
+              tmp -= centers[l][j];
             }
           }
 
-          copy[j] *= weight;
-          center[j] += copy[j];
+          // Compute sums
+          ws += weight[i] + penality[i];
+          res += tmp * weight[i] + penality[i] * elements[i][j];
         }
       }
-    }
 
-    // Weighted mean
-    for (size_t j = 0; j < nb_dim; j++) {
-      center[j] /= res;
+      // Compute Weighted mean
+      centers[k][j] = res / ws;
     }
-
-    copy_array(center, centers[k], nb_dim); // save new center
   }
 
   // Update withinss
@@ -218,12 +220,12 @@ void r2okm(double **elements, double **centers, bool **asso,
     // Assign all elements to a class
     r2_assign(elements, centers, asso, nb_elements, nb_clusters, nb_dim, lambda,
               withinss);
-    double va = sum_double_array(withinss, nb_clusters);
+    double va = sum_double_array(withinss, nb_elements);
 
     // Update all centers
     r2_update(elements, centers, asso, nb_elements, nb_clusters, nb_dim, lambda,
               withinss);
-    *totwss = sum_double_array(withinss, nb_clusters);
+    *totwss = sum_double_array(withinss, nb_elements);
 
     PRINT_ITER(trace, i, va, *totwss);
 
