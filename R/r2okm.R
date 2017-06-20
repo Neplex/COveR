@@ -14,7 +14,7 @@
 #'
 #' @examples
 #' r2okm(iris[,-5], 3)
-#' r2okm(iris[,-5], 3, -0.5)
+#' r2okm(iris[,-5], 3, .3)
 #' r2okm(iris[,-5], iris[,-5], 1)
 r2okm <- function(x, centers, lambda = 0, nstart = 10, trace = FALSE, iter.max = 20) {
 
@@ -45,6 +45,8 @@ r2okm <- function(x, centers, lambda = 0, nstart = 10, trace = FALSE, iter.max =
 
   if (!is.numeric(lambda))
     stop("lambda must be numeric")
+  if (lambda < 0)
+    stop("lambda must be positive or null")
 
   if (!is.numeric(nstart))
     stop("nstart must be numeric")
