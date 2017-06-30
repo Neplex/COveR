@@ -276,20 +276,20 @@ measure <- function(x, min = 0, max = 1, step = 0.1) {
   if (!is.matrix(x))
     stop("x must be a numeric matrix")
 
-  seuil <- seq(min, max, step)
-  overlap <- sapply(seuil, function(y) sum(x >= y)/nrow(x))
+  t <- seq(min, max, step)
+  overlap <- sapply(t, function(y) sum(x >= y)/nrow(x))
 
-  plot(seuil, overlap, type = "l")
+  plot(t, overlap, type = "l")
 }
 
 #' Degree matrix to logical
 #'
-#' Transform a membership degree matrix into logical matrix by seuil.
+#' Transform a membership degree matrix into logical matrix by threshold.
 #'
 #' @param x A matrix of membership degree.
-#' @param seuil The seuil to assign over.
+#' @param t The threshold to assign over.
 #'
 #' @export
-degree2logical <- function(x, seuil = min(apply(x, 1, max))) {
-  x >= seuil
+degree2logical <- function(x, t = min(apply(x, 1, max))) {
+  x >= t
 }
