@@ -1,6 +1,6 @@
 Package: COveR
 Title: Clustering with Overlaps in R
-Version: 0.10.2
+Version: 0.10.3
 Authors@R: c(
   person("Guillaume", "Cleuziou", email = "guillaume.cleuziou@univ-orleans.fr", role = "cre"),
   person("Nicolas", "Hiot", email = "nicolas.hiot@etu.univ-orleans.fr", role = "aut"))
