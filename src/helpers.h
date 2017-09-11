@@ -11,7 +11,7 @@
 #include <time.h>
 
 // GNU Scientific Library
-#include <gsl/gsl_linalg.h>
+// TODO: GSL on CRAN #include <gsl/gsl_linalg.h>
 
 // Usefull math functions
 #define sqr(x) ((x) * (x))
@@ -53,9 +53,9 @@ typedef struct {
     return a;                                                                  \
   }
 
-define_array(unsigned, 0);
-define_array(double, 0);
-define_array(Interval, ((Interval){0, 0}));
+define_array(unsigned, 0)
+define_array(double, 0)
+define_array(Interval, ((Interval){0, 0}))
 
 // Macro to automaticly create function to alloc matrix of type T with default
 // value Dval
@@ -71,9 +71,9 @@ define_array(Interval, ((Interval){0, 0}));
     return m;                                                                  \
   }
 
-define_matrix(bool, true);
-define_matrix(double, 0);
-define_matrix(Interval, ((Interval){0, 0}));
+define_matrix(bool, true)
+define_matrix(double, 0)
+define_matrix(Interval, ((Interval){0, 0}))
 
 // Delete array, not safe as function with void** but not need to cast
 #define delete_array(a)                                                        \
@@ -294,6 +294,7 @@ void initVectorClusters(double **elements, double **clusters,
 
 // ===== PSEUDO-INVERSE =====
 
+/* TODO: GSL on CRAN
 // Code from: https://gist.github.com/turingbirds/5e99656e08dbe1324c99
 gsl_matrix *moore_penrose_pinv(gsl_matrix *A, const double rcond) {
 
@@ -308,7 +309,7 @@ gsl_matrix *moore_penrose_pinv(gsl_matrix *A, const double rcond) {
   bool was_swapped = false;
 
   if (m > n) {
-    /* libgsl SVD can only handle the case m <= n - transpose matrix */
+    // libgsl SVD can only handle the case m <= n - transpose matrix
     was_swapped = true;
     _tmp_mat = gsl_matrix_alloc(m, n);
     gsl_matrix_transpose_memcpy(_tmp_mat, A);
@@ -318,14 +319,14 @@ gsl_matrix *moore_penrose_pinv(gsl_matrix *A, const double rcond) {
     n = i;
   }
 
-  /* do SVD */
+  // do SVD
   V = gsl_matrix_alloc(m, m);
   u = gsl_vector_alloc(m);
   _tmp_vec = gsl_vector_alloc(m);
   gsl_linalg_SV_decomp(A, V, u, _tmp_vec);
   gsl_vector_free(_tmp_vec);
 
-  /* compute Σ⁻¹ */
+  // compute Σ⁻¹
   Sigma_pinv = gsl_matrix_alloc(m, n);
   gsl_matrix_set_zero(Sigma_pinv);
   cutoff = rcond * gsl_vector_max(u);
@@ -339,7 +340,7 @@ gsl_matrix *moore_penrose_pinv(gsl_matrix *A, const double rcond) {
     gsl_matrix_set(Sigma_pinv, i, i, x);
   }
 
-  /* libgsl SVD yields "thin" SVD - pad to full matrix by adding zeros */
+  // libgsl SVD yields "thin" SVD - pad to full matrix by adding zeros
   U = gsl_matrix_alloc(n, n);
   gsl_matrix_set_zero(U);
 
@@ -353,7 +354,7 @@ gsl_matrix *moore_penrose_pinv(gsl_matrix *A, const double rcond) {
     gsl_matrix_free(_tmp_mat);
   }
 
-  /* two dot products to obtain pseudoinverse */
+  // two dot products to obtain pseudoinverse
   _tmp_mat = gsl_matrix_alloc(m, n);
   gsl_blas_dgemm(CblasNoTrans, CblasNoTrans, 1., V, Sigma_pinv, 0., _tmp_mat);
 
@@ -373,5 +374,6 @@ gsl_matrix *moore_penrose_pinv(gsl_matrix *A, const double rcond) {
 
   return A_pinv;
 }
+*/
 
 #endif

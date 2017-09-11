@@ -17,6 +17,10 @@ else
 fi
 
 # Now substitute these variables in src/Makevars.in to create src/Makevars
+# TODO: GSL on CRAN
+GSL_CFLAGS=""
+GSL_LIBS=""
+
 AC_SUBST(GSL_CFLAGS)
 AC_SUBST(GSL_LIBS)
 

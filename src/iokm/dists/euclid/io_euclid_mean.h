@@ -108,6 +108,7 @@ void io_euclid_mean_std_update(Interval **elements, Interval **centers,
   }
 }
 
+/* TODO: GSL on CRAN
 void io_euclid_mean_matrix_update(Interval **elements, Interval **centers,
                                   bool **asso, unsigned nb_elements,
                                   unsigned nb_clusters, unsigned nb_interval,
@@ -152,7 +153,7 @@ void io_euclid_mean_matrix_update(Interval **elements, Interval **centers,
 
   gsl_matrix_free(norm);
   gsl_matrix_free(inv);
-}
+}*/
 
 void io_euclid_mean_update(Interval **elements, Interval **centers, bool **asso,
                            unsigned nb_elements, unsigned nb_clusters,
@@ -165,9 +166,11 @@ void io_euclid_mean_update(Interval **elements, Interval **centers, bool **asso,
     break;
 
   case MATRIX:
+    error("NOT IMPLEMENT\n");
+    /* TODO: GSL on CRAN
     io_euclid_mean_matrix_update(elements, centers, asso, nb_elements,
                                  nb_clusters, nb_interval, need_valid,
-                                 withinss);
+                                 withinss);*/
     break;
   }
 }

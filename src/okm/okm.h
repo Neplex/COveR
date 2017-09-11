@@ -517,7 +517,7 @@ void R_okm(double *x, double *cen, int *pmax, int *pk, int *pp, int *pn,
   if (save)
     swss[0] = wss;
   if (visu)
-    printf("WSS at first turn : %f\n", wss);
+    Rprintf("WSS at first turn : %f\n", wss);
   for (iter = 0; iter < iterMax; iter++) {
     // DBG
     if (method == 'e') {
@@ -546,7 +546,7 @@ void R_okm(double *x, double *cen, int *pmax, int *pk, int *pp, int *pn,
       // DBG
     }
     if (visu)
-      printf("WSS at turn %d : %f\n", iter, wss);
+      Rprintf("WSS at turn %d : %f\n", iter, wss);
 
     if (save) {
       swss[iter + 1] = wss;
