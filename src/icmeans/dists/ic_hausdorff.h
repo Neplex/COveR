@@ -3,8 +3,6 @@
 
 #include "../../helpers.h"
 
-// TODO: hausdorff update
-
 void ic_hausdorff_update(Interval **elements, Interval **centers, double **asso,
                          unsigned nb_elements, unsigned nb_clusters,
                          unsigned nb_interval, double m, double *withinss) {
