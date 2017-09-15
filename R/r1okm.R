@@ -90,7 +90,7 @@ r1okm <- function(x, centers, alpha = 0, nstart = 10, trace = FALSE, iter.max = 
 #'
 #' @export
 print.r1okm <- function(x, ...) {
-  cat("NEOKM clustering with ", length(x$size), " clusters of sizes ", paste(x$size,
+  cat("R1OKM clustering with ", length(x$size), " clusters of sizes ", paste(x$size,
     collapse = ", "), "\n", sep = "")
   cat("\nCluster means:\n")
   print(x$centers, ...)

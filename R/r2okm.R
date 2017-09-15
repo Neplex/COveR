@@ -92,7 +92,7 @@ r2okm <- function(x, centers, lambda = 0, nstart = 10, trace = FALSE, iter.max =
 #'
 #' @export
 print.r2okm <- function(x, ...) {
-  cat("NEOKM clustering with ", length(x$size), " clusters of sizes ", paste(x$size,
+  cat("R2OKM clustering with ", length(x$size), " clusters of sizes ", paste(x$size,
     collapse = ", "), "\n", sep = "")
   cat("\nCluster means:\n")
   print(x$centers, ...)

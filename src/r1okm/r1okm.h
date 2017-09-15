@@ -78,10 +78,14 @@ void r1_assign(double **elements, double **centers, bool **asso,
       dists[k] = vector_square_distance(elements[i], centers[k], nb_dim);
     }
 
+    unsigned nb_clusters_check = 0;
+
     do {
       double min_dist = INFINITY;
       unsigned ck = 0; ///< The next closest cluster
       end = true;
+
+      nb_clusters_check++;
 
       // Search closest cluster, that not associated
       for (size_t k = 0; k < nb_clusters; k++) {
@@ -111,7 +115,7 @@ void r1_assign(double **elements, double **centers, bool **asso,
         end = false;              // Not the end
       }
 
-    } while (!end);
+    } while (!end && nb_clusters_check<=nb_clusters);
 
     // If the new association is better than previous iteration, choose it
     if (new_dist <= withinss[i]) {
