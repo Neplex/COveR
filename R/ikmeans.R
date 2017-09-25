@@ -1,7 +1,7 @@
 #' Interval kmeans clustering.
 #'
 #' Culster interval data with kmeans algorithm.
-#' @useDynLib COveR R_ikmeans
+#' @useDynLib COveR, .registration = TRUE
 #'
 #' @param x An 3D interval array.
 #' @param centers A number or interval, number of cluster for clustering or pre init centers.
@@ -65,11 +65,11 @@ ikmeans <- function(x, centers, nstart = 10, distance = "euclid", trace = FALSE,
     stop(paste("Unknow distance:", distance, ". Try 'euclid' or 'hausdorff'"))
   }
 
-  #  Call
+  # Call
   d <- dim(x$inter)
   n <- dimnames(x$inter)
   v <- as.numeric(as.vector(x$inter))
-  c <- .Call(R_ikmeans, v, d[1], d[2], d[3], nc, nstart, dist, trace, iter.max,
+  c <- .Call("_ikmeans", v, d[1], d[2], d[3], nc, nstart, dist, trace, iter.max,
     c)
 
   # Naming

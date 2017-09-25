@@ -1,7 +1,7 @@
 #' Interval okm clustering.
 #'
 #' Culster interval data with okm algorithm.
-#' @useDynLib COveR R_iokm
+#' @useDynLib COveR, .registration = TRUE
 #'
 #' @param x An 3D interval array.
 #' @param centers A number or interval, number of cluster for clustering or pre init centers.
@@ -77,11 +77,11 @@ iokm <- function(x, centers, nstart = 10, distance = "euclid", algorithm = "std"
   # Update
   up <- match(update, c("mean", "sum", "join", "meet")) - 1
 
-
+  # Call
   d <- dim(x$inter)
   n <- dimnames(x$inter)
   v <- as.numeric(as.vector(x$inter))
-  c <- .Call(R_iokm, v, d[1], d[2], d[3], nc, nstart, dist, algo, up, trace, iter.max,
+  c <- .Call("_iokm", v, d[1], d[2], d[3], nc, nstart, dist, algo, up, trace, iter.max,
     secure, c)
 
 

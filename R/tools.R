@@ -4,6 +4,9 @@
 #'
 #' @param x A cluster.
 #'
+#' @importFrom grDevices col2rgb rainbow rgb
+#' @importFrom stats model.matrix
+#'
 #' @export
 #'
 #' @examples

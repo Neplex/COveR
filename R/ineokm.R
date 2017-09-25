@@ -1,7 +1,7 @@
 #' Interval neokm clustering.
 #'
 #' Culster interval data with neokm algorithm.
-#' @useDynLib COveR R_ineokm
+#' @useDynLib COveR, .registration = TRUE
 #'
 #' @param x An 3D interval array.
 #' @param centers A number or interval, number of cluster for clustering or pre init centers.
@@ -61,11 +61,11 @@ ineokm <- function(x, centers, alpha = 0.3, beta = 0.05, nstart = 10, trace = FA
   if (iter.max <= 0)
     stop("iter.max must be positive")
 
-  #  Call
+  # Call
   d <- dim(x$inter)
   n <- dimnames(x$inter)
   v <- as.numeric(as.vector(x$inter))
-  c <- .Call(R_ineokm, v, d[1], d[2], d[3], nc, alpha, beta, nstart, trace, iter.max,
+  c <- .Call("_ineokm", v, d[1], d[2], d[3], nc, alpha, beta, nstart, trace, iter.max,
     c)
 
   # Naming

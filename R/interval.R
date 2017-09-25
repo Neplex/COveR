@@ -29,6 +29,8 @@ print.interval <- function(x, ...) {
 #' @param class The column of class (empty if not).
 #' @param ... Other options from read.
 #'
+#' @importFrom utils read.csv
+#'
 #' @export
 read.interval <- function(..., row.names = FALSE, class = NULL) {
   args <- list(...)
@@ -86,6 +88,8 @@ read.interval <- function(..., row.names = FALSE, class = NULL) {
 #' @param class Write the class column at the end ?.
 #' @param ... Other options from write.
 #'
+#' @importFrom utils write.csv
+#'
 #' @export
 write.interval <- function(x, ..., class = FALSE) {
   if (!is.interval(x))
@@ -116,6 +120,8 @@ write.interval <- function(x, ..., class = FALSE) {
 #'   - 'col' Colors of rectangles.
 #'   - 'add' Add to exsiting plot or not.
 #'   - Other options from plot.
+#'
+#' @importFrom graphics plot rect
 #'
 #' @export
 #'
@@ -270,6 +276,8 @@ igenerate <- function(n, ...) {
 #' @param min The minimum value of degree.
 #' @param max The maximum value of degree.
 #' @param step The step of degree.
+#'
+#' @importFrom graphics plot
 #'
 #' @export
 measure <- function(x, min = 0, max = 1, step = 0.1) {

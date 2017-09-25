@@ -1,7 +1,7 @@
 #' neokm clustering.
 #'
 #' Culster data with neokm algorithm.
-#' @useDynLib COveR R_neokm
+#' @useDynLib COveR, .registration = TRUE
 #'
 #' @param x An data matrix.
 #' @param centers A number, number of cluster for clustering or pre init centers.
@@ -62,9 +62,9 @@ neokm <- function(x, centers, alpha = 0.3, beta = 0.05, nstart = 10, trace = FAL
   if (iter.max <= 0)
     stop("iter.max must be positive")
 
-
+  # Call
   v <- as.numeric(as.vector(data.matrix(x)))
-  c <- .Call(R_neokm, v, nrow(x), ncol(x), nc, alpha, beta, nstart, trace, iter.max,
+  c <- .Call("_neokm", v, nrow(x), ncol(x), nc, alpha, beta, nstart, trace, iter.max,
     c)
 
 

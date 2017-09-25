@@ -1,7 +1,7 @@
 #' r1okm clustering.
 #'
 #' Culster data with r1okm algorithm.
-#' @useDynLib COveR R_r1okm
+#' @useDynLib COveR, .registration = TRUE
 #'
 #' @param x An data matrix.
 #' @param centers A number, number of cluster for clustering or pre init centers.
@@ -60,8 +60,9 @@ r1okm <- function(x, centers, alpha = 0, nstart = 10, trace = FALSE, iter.max = 
     stop("iter.max must be positive")
 
 
+  # Call
   v <- as.numeric(as.vector(data.matrix(x)))
-  c <- .Call(R_r1okm, v, nrow(x), ncol(x), nc, alpha, nstart, trace, iter.max,
+  c <- .Call("_r1okm", v, nrow(x), ncol(x), nc, alpha, nstart, trace, iter.max,
     c)
 
 

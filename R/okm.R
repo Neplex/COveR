@@ -16,7 +16,7 @@
 #' OKM clustering.
 #'
 #' Overlapping Kmeans algorithm.
-#' @useDynLib COveR R_okm
+#' @useDynLib COveR, .registration = TRUE
 #'
 #' @param X A data.
 #' @param centers A number or matrix, number of cluster for clustering or pre init centers.
@@ -54,18 +54,17 @@ okm <- function(X, centers, iter.max = 10, nstart = 1, trace = FALSE, method = "
   if (nrow(X) < k)
     stop("More cluster than datas in X.")
 
-
   if (method == "euclid")
     method <- 1 else if (method == "manhattan")
     method <- 2 else stop("Unknown distance computation method.")
-  U <- .C(R_okm, as.double(t(X)), centers = as.double(t(cen)), as.integer(iter.max), 
+  U <- .C("_okm", as.double(t(X)), centers = as.double(t(cen)), as.integer(iter.max),
     as.integer(k), as.integer(ncol(X)), as.integer(nrow(X)), clusters = integer(nrow(X) *
       k), wss = as.double(k), over = as.double(k), as.integer(trace), 0, 0,
     0, 0, 0, as.integer(method))
   if (use.nstart && nstart > 1) {
     for (i in 2:nstart) {
       cen <- X[sample(1:nrow(X), k), ]
-      UU <- .C(R_okm, as.double(t(X)), centers = as.double(t(cen)), as.integer(iter.max), 
+      UU <- .C("_okm", as.double(t(X)), centers = as.double(t(cen)), as.integer(iter.max),
         as.integer(k), as.integer(ncol(X)), as.integer(nrow(X)), clusters = integer(nrow(X) *
           k), wss = as.double(k), over = as.double(k), as.integer(trace),
         0, 0, 0, 0, 0, as.integer(method))

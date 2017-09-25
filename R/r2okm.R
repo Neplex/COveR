@@ -1,7 +1,7 @@
 #' r2okm clustering.
 #'
 #' Culster data with r2okm algorithm.
-#' @useDynLib COveR R_r2okm
+#' @useDynLib COveR, .registration = TRUE
 #'
 #' @param x An data matrix.
 #' @param centers A number, number of cluster for clustering or pre init centers.
@@ -62,8 +62,9 @@ r2okm <- function(x, centers, lambda = 0, nstart = 10, trace = FALSE, iter.max =
     stop("iter.max must be positive")
 
 
+  # Call
   v <- as.numeric(as.vector(data.matrix(x)))
-  c <- .Call(R_r2okm, v, nrow(x), ncol(x), nc, lambda, nstart, trace, iter.max,
+  c <- .Call("_r2okm", v, nrow(x), ncol(x), nc, lambda, nstart, trace, iter.max,
     c)
 
 

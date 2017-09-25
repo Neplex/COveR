@@ -1,7 +1,7 @@
 #' Interval fuzzy cmeans clustering.
 #'
 #' Culster interval data with fuzzy cmeans algorithm.
-#' @useDynLib COveR R_icmeans
+#' @useDynLib COveR, .registration = TRUE
 #'
 #' @param x An 3D interval array.
 #' @param centers A number or interval, number of cluster for clustering or pre init centers.
@@ -71,11 +71,11 @@ fuzzy_icmeans <- function(x, centers, m = 2, nstart = 2, distance = "euclid", tr
     stop(paste("Unknow distance:", distance, ". Try 'euclid' or 'hausdorff'"))
   }
 
-  #  Call
+  # Call
   d <- dim(x$inter)
   n <- dimnames(x$inter)
   v <- as.numeric(as.vector(x$inter))
-  c <- .Call(R_icmeans, v, d[1], d[2], d[3], nc, m, nstart, dist, trace, iter.max,
+  c <- .Call("_icmeans", v, d[1], d[2], d[3], nc, m, nstart, dist, trace, iter.max,
     c)
 
   # Naming
