@@ -28,4 +28,6 @@ static const R_CMethodDef cMethods[] = {{"_okm", (DL_FUNC)&R_okm, 16, okm_t},
 
 void R_init_COveR(DllInfo *info) {
   R_registerRoutines(info, cMethods, callMethods, NULL, NULL);
+  R_useDynamicSymbols(info, FALSE);
+  R_forceSymbols(info, FALSE);
 }

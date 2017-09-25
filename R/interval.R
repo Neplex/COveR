@@ -156,6 +156,8 @@ plot.interval <- function(x, ...) {
 #' @param data Some data to aggregate.
 #' @param col A number (the column index to aggregate on).
 #'
+#' @importFrom stats aggregate rnorm
+#'
 #' @export
 #'
 #' @examples
