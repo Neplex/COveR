@@ -4,6 +4,9 @@
 #' @param x an R object.
 #'
 #' @export
+#'
+#' @examples
+#' is.interval(inter_city)
 is.interval <- function(x) {
   class(x) == "interval" && length(dim(x$inter)) == 3 && dim(x$inter)[2] == 2
 }
@@ -15,6 +18,9 @@ is.interval <- function(x) {
 #' @param ... Other options from print.
 #'
 #' @export
+#'
+#' @examples
+#' print(inter_city)
 print.interval <- function(x, ...) {
   print(x$inter, ...)
   cat("Available components:\n")
