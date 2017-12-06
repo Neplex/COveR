@@ -1,6 +1,6 @@
 Package: COveR
 Title: Clustering with Overlaps
-Version: 1.0.0
+Version: 1.0.3
 Authors@R: c(
   person("Guillaume", "Cleuziou", email = "guillaume.cleuziou@univ-orleans.fr", role = "cre"),
   person("Nicolas", "Hiot", email = "nicolas.hiot@etu.univ-orleans.fr", role = "aut"))
@@ -17,5 +17,3 @@ LazyData: true
 RoxygenNote: 6.0.1
 Suggests: testthat
 SystemRequirements: Gnu Scientific Library version >= 1.12
-
-

@@ -37,7 +37,6 @@ r2okm <- function(x, centers, lambda = 0, nstart = 10, trace = FALSE, iter.max =
     centers <- as.matrix(data.matrix(centers))
     nc <- nrow(centers)
     c <- as.numeric(as.vector(centers))
-    print(c)
     if (ncol(centers) != ncol(x))
       stop("x and centers must have the same number of dimensions")
 

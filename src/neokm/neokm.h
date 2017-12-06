@@ -13,7 +13,7 @@ double neo_betweenss(double **centers, unsigned nb_clusters, unsigned nb_dim) {
   for (size_t k = 0; k < nb_clusters; k++) {
 
     // Get the mean element of other clusters center
-    double mean[nb_dim];
+    double* mean = new_array_double(nb_dim);
     for (size_t j = 0; j < nb_dim; j++) {
       for (size_t i = 0; i < nb_clusters; i++) {
         if (i != k) {
@@ -25,6 +25,8 @@ double neo_betweenss(double **centers, unsigned nb_clusters, unsigned nb_dim) {
 
     // Sum distance
     res += vector_square_distance(centers[k], mean, nb_dim);
+
+    delete_array(&mean);
   }
 
   return res;

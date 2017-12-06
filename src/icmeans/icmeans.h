@@ -89,7 +89,7 @@ double ic_getBetweenss(Interval **centers, unsigned nb_clusters,
   for (size_t k = 0; k < nb_clusters; k++) {
 
     // Get the mean element of other centers
-    Interval mean[nb_interval];
+    Interval* mean = new_array_Interval(nb_interval);
     for (size_t j = 0; j < nb_interval; j++) {
       mean[j].min = 0;
       mean[j].max = 0;
@@ -115,6 +115,8 @@ double ic_getBetweenss(Interval **centers, unsigned nb_clusters,
       res += haus_distance(centers[k], mean, nb_interval);
       break;
     }
+
+    delete_array(&mean);
   }
 
   return res;
