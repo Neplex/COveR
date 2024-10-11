@@ -69,7 +69,7 @@ as.interval.interval <- function(x) x
 #' @examples
 #' as.interval(1:6)
 as.interval.numeric <- function(x) {
-  names <- names <- list(NULL, c("min", "max"), names(x))
+  names <- list(NULL, c("min", "max"), names(x))
   d <- array(x, dim = list(1, 2, length(x)/2), dimnames = names)
   return(structure(list(inter = d, class = vector()), class = "interval"))
 }
@@ -82,7 +82,7 @@ as.interval.numeric <- function(x) {
 #' @examples
 #' as.interval(matrix(1:12, 3, 4))
 as.interval.matrix <- function(x) {
-  names <- names <- list(row.names(x), c("min", "max"), NULL)
+  names <- list(row.names(x), c("min", "max"), NULL)
   d <- array(x, dim = list(nrow(x), 2, ncol(x)/2), dimnames = names)
   return(structure(list(inter = d, class = vector()), class = "interval"))
 }

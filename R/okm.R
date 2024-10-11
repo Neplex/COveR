@@ -38,7 +38,7 @@ okm <- function(X, centers, iter.max = 10, nstart = 1, trace = FALSE, method = "
   if (is.null(dim(centers))) {
     use.nstart <- TRUE
     k <- centers
-    cen <- X[sample(1:nrow(X), k), ]
+    cen <- X[sample(seq_len(nrow(X)), k), ]
   } else {
     cen <- as.matrix(centers)
     k <- nrow(cen)
@@ -63,7 +63,7 @@ okm <- function(X, centers, iter.max = 10, nstart = 1, trace = FALSE, method = "
     0, 0, 0, as.integer(method))
   if (use.nstart && nstart > 1) {
     for (i in 2:nstart) {
-      cen <- X[sample(1:nrow(X), k), ]
+      cen <- X[sample(seq_len(nrow(X)), k), ]
       UU <- .C("_okm", as.double(t(X)), centers = as.double(t(cen)), as.integer(iter.max),
         as.integer(k), as.integer(ncol(X)), as.integer(nrow(X)), clusters = integer(nrow(X) *
           k), wss = as.double(k), over = as.double(k), as.integer(trace),

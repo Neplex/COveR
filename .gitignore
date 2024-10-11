@@ -3,7 +3,6 @@
 .Rhistory
 .RData
 *.Rcheck
-man/
 
 # Object files
 *.o

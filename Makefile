@@ -1,11 +1,5 @@
-# SHELL
+# SHELL
 SHELL = /bin/sh
-
-# COMMAND
-CHECK = R CMD check
-BUILD = R CMD build
-INSTALL = R CMD INSTALL
-MEMORY = R -d valgrind
 R = Rscript
 
 # Directory
@@ -14,7 +8,7 @@ DOC_DIR = man/
 TESTS_DIR = tests/
 
 # File to clean
-TRASH = $(SRC_DIR)*.so $(SRC_DIR)*.o *.tar.gz $(DOC_DIR)
+TRASH = $(SRC_DIR)*.so $(SRC_DIR)*.o *.tar.gz
 
 # == MAKE COMMAND ==============================================================
 
@@ -23,19 +17,27 @@ all: build
 help:
 	@echo "Available:"
 	@echo "- config"
+	@echo "- doc"
 	@echo "- check"
+	@echo "- checkmem"
 	@echo "- build"
 	@echo "- install"
 	@echo "- test"
-	@echo "- doc"
+	@echo "- lint"
 	@echo "- clean"
 
 config: clean
 	autoconf
 	./configure
 
+doc: config
+	$(R) -e devtools::document\(\)
+
 check: doc
 	$(R) -e devtools::check\(\)
+
+checkmem: doc
+	echo "devtools::check()" | R --debugger=valgrind --debugger-args="--leak-check=full --track-origins=yes" --vanilla --slave
 
 build: doc
 	$(R) -e devtools::build\(\)
@@ -46,8 +48,8 @@ install: doc
 test: doc
 	$(R) -e devtools::test\(\)
 
-doc: config
-	$(R) -e devtools::document\(\)
+lint: build
+	$(R) -e lintr::lint_package\(\)
 
 .PHONY: clean
 clean:

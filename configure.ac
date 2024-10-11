@@ -1,4 +1,4 @@
-AC_INIT([COveR], 0.2)
+AC_INIT([COveR],[0.2])
 
 # Checks for common programs using default macros
 AC_PROG_CC
@@ -24,4 +24,5 @@ GSL_LIBS=""
 AC_SUBST(GSL_CFLAGS)
 AC_SUBST(GSL_LIBS)
 
-AC_OUTPUT(src/Makevars)
+AC_CONFIG_FILES([src/Makevars])
+AC_OUTPUT

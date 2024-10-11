@@ -140,11 +140,11 @@ plot.interval <- function(x, ...) {
     stop("x must be interval")
 
   args <- list(...)
-  dx <- matrix(c(x$inter[, , 1]), ncol = 2)
+  dx <- matrix(x$inter[, , 1], ncol = 2)
   dy <- matrix(c(1, 2), ncol = 2)
 
   if (dim(x$inter)[3] > 1) {
-    dy <- matrix(c(x$inter[, , 2]), ncol = 2)
+    dy <- matrix(x$inter[, , 2], ncol = 2)
   }
 
   # Draw plot
@@ -263,7 +263,7 @@ igenerate <- function(n, ...) {
   data <- NULL
 
   if (length(gen))
-    for (i in 1:length(gen)) {
+    for (i in seq_along(gen)) {
       x <- rnorm(n, gen[[i]][1], gen[[i]][2])
       y <- rnorm(n, gen[[i]][3], gen[[i]][4])
 

@@ -46,7 +46,7 @@
 #'   \item{angry.aggresive}{}
 #' }
 #'
-#' @source \url{http://mulan.sourceforge.net/datasets-mlc.html}
+#' @source \url{https://mulan.sourceforge.net/datasets-mlc.html}
 "inter_emotions"
 
 #' Results of a chemical analysis of wines grown in the same region in Italy but
@@ -79,7 +79,7 @@
 #'   \item{Class9}{}
 #' }
 #'
-#' @source \url{https://archive.ics.uci.edu/ml/datasets.html}
+#' @source \url{https://archive.ics.uci.edu/dataset/186/wine+quality}
 "inter_wine"
 
 #' Temperature by month and humidity in european city.

@@ -1,0 +1,47 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: COveR
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Guillaume
+    family-names: Cleuziou
+    email: guillaume.cleuziou@univ-orleans.fr
+    affiliation: 'LIFO, Université d''Orléans'
+  - given-names: Nicolas
+    family-names: Hiot
+    affiliation: 'LIFO, Université d''Orléans'
+    orcid: 'https://orcid.org/0000-0003-4318-4906'
+    email: nicolas.hiot@univ-orleans.fr
+identifiers:
+  - type: swh
+    value: 'swh:1:dir:4b90d4f4241cb7ebded8819ba0c81389bed5b245'
+repository-code: 'https://github.com/Neplex/COveR'
+abstract: >-
+  Provide functions for overlaps clustering, fuzzy
+  clustering and interval-valued data manipulation. The
+  package implement the following algorithms:
+
+  - OKM (Overlapping Kmeans) from Cleuziou, G. (2007)
+  <doi:10.1109/icpr.2008.4761079> ;
+
+  - NEOKM (Non-exhaustive overlapping Kmeans) from Whang, J.
+  J., Dhillon, I. S., and Gleich, D. F. (2015)
+  <doi:10.1137/1.9781611974010.105> ;
+
+  - Fuzzy Cmeans from Bezdek, J. C. (1981)
+  <doi:10.1007/978-1-4757-0450-1> ;
+
+  - Fuzzy I-Cmeans from de A.T. De Carvalho, F. (2005)
+  <doi:10.1016/j.patrec.2006.08.014>.
+keywords:
+  - clustering
+  - overlapping
+  - interval
+license: GPL-2.0-or-later
+version: 1.0.3
+date-released: '2017-12-06'
