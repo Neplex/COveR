@@ -2,17 +2,17 @@
 % Please edit documentation in R/interval.R
 \name{write.interval}
 \alias{write.interval}
-\title{Interval saving.}
+\title{Save 3D Interval Array to CSV}
 \usage{
 write.interval(x, ..., class = FALSE)
 }
 \arguments{
-\item{x}{An interval.}
+\item{x}{An interval object.}
 
-\item{...}{Other options from write.}
+\item{...}{Additional arguments passed to write.csv.}
 
-\item{class}{Write the class column at the end ?.}
+\item{class}{Logical indicating whether to write the class column at the end.}
 }
 \description{
-Save 3D interval array to csv to open later with iload.
+Save interval data to a CSV file.
 }

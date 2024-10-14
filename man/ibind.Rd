@@ -2,19 +2,20 @@
 % Please edit documentation in R/interval.R
 \name{ibind}
 \alias{ibind}
-\title{Interval binding.}
+\title{Bind Multiple Interval Objects}
 \usage{
 ibind(..., class = FALSE)
 }
 \arguments{
-\item{...}{All intervals to bind.}
+\item{...}{Interval objects to bind.}
 
-\item{class}{set to true to create class by bind interval, false bind class attribute.}
+\item{class}{Logical indicating whether to create a new class by binding.}
 }
 \description{
-Bind intervals.
+Bind multiple interval objects into one.
 }
 \examples{
-ibind(iaggregate(iris,5), iaggregate(iris,5))
-ibind(iaggregate(iris,5), iaggregate(iris,5), iaggregate(iris,5), class=TRUE)
+ibind(iaggregate(iris, 5), iaggregate(iris, 5))
+ibind(iaggregate(iris, 5), iaggregate(iris, 5), iaggregate(iris, 5),
+class = TRUE)
 }

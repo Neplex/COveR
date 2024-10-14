@@ -2,20 +2,20 @@
 % Please edit documentation in R/interval.R
 \name{iaggregate}
 \alias{iaggregate}
-\title{Interval aggregation.}
+\title{Aggregate Data to 3D Interval Array}
 \usage{
 iaggregate(data, col = 1)
 }
 \arguments{
-\item{data}{Some data to aggregate.}
+\item{data}{The data to aggregate.}
 
-\item{col}{A number (the column index to aggregate on).}
+\item{col}{The column index to aggregate on.}
 }
 \description{
-Aggregate data to 3D interval array.
+Aggregate data into a 3D interval array.
 }
 \examples{
-iaggregate(iris, col=5)
-iaggregate(rock, col=4)
-iaggregate(cars, col=1)
+iaggregate(iris, col = 5)
+iaggregate(rock, col = 4)
+iaggregate(cars, col = 1)
 }

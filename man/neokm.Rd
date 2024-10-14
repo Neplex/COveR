@@ -2,7 +2,7 @@
 % Please edit documentation in R/neokm.R
 \name{neokm}
 \alias{neokm}
-\title{neokm clustering.}
+\title{NEOKM Clustering}
 \usage{
 neokm(
   x,
@@ -15,24 +15,27 @@ neokm(
 )
 }
 \arguments{
-\item{x}{An data matrix.}
+\item{x}{A data matrix.}
 
-\item{centers}{A number, number of cluster for clustering or pre init centers.}
+\item{centers}{The number of clusters or pre-initialized centers.}
 
-\item{alpha}{A number (overlap).}
+\item{alpha}{A number representing overlap.}
 
-\item{beta}{A number (non-exhaustiveness).}
+\item{beta}{A number representing non-exhaustiveness.}
 
-\item{nstart}{A number, number of execution to find the best result.}
+\item{nstart}{Number of executions to find the best result.}
 
-\item{trace}{A boolean, tracing information on the progress of the algorithm is produced.}
+\item{trace}{Logical, if TRUE, trace progress of the algorithm.}
 
-\item{iter.max}{the maximum number of iterations allowed.}
+\item{iter.max}{Maximum number of iterations allowed.}
+}
+\value{
+A list representing the clustering results.
 }
 \description{
-Culster data with neokm algorithm.
+Cluster data using the NEOKM algorithm.
 }
 \examples{
-neokm(iris[,-5], 3)
-neokm(iris[,-5], iris[,-5], 1, 2)
+neokm(iris[, -5], 3)
+neokm(iris[, -5], iris[, -5], 1, 2)
 }

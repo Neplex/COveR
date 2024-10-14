@@ -2,13 +2,13 @@
 % Please edit documentation in R/convert.R
 \name{as.interval}
 \alias{as.interval}
-\title{Interval data convertor}
+\title{Interval Data Converter}
 \usage{
 as.interval(x)
 }
 \arguments{
-\item{x}{an R object.}
+\item{x}{An R object.}
 }
 \description{
-Convert data to interval
+Generic function to convert different data types to interval.
 }

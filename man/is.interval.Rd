@@ -2,15 +2,15 @@
 % Please edit documentation in R/interval.R
 \name{is.interval}
 \alias{is.interval}
-\title{Interval data test}
+\title{Interval Data Test}
 \usage{
 is.interval(x)
 }
 \arguments{
-\item{x}{an R object.}
+\item{x}{An R object.}
 }
 \description{
-Test if its argument is a (strict) interval.
+Test if an object is a (strict) interval.
 }
 \examples{
 is.interval(inter_city)

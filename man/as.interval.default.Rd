@@ -2,13 +2,16 @@
 % Please edit documentation in R/convert.R
 \name{as.interval.default}
 \alias{as.interval.default}
-\title{default to interval}
+\title{Default Method for Interval Conversion}
 \usage{
 \method{as.interval}{default}(x)
 }
 \arguments{
-\item{x}{an interval.}
+\item{x}{An object to be converted.}
+}
+\value{
+`NULL` as default behavior for non-supported types.
 }
 \description{
-default to interval
+Default Method for Interval Conversion
 }

@@ -2,17 +2,20 @@
 % Please edit documentation in R/convert.R
 \name{as.data.frame.interval}
 \alias{as.data.frame.interval}
-\title{Interval to data.frame}
+\title{Convert Interval to Data Frame}
 \usage{
 \method{as.data.frame}{interval}(x, ...)
 }
 \arguments{
-\item{x}{an interval.}
+\item{x}{An interval object.}
 
-\item{...}{additional arguments to be passed to or from methods.}
+\item{...}{Additional arguments to be passed to or from methods.}
+}
+\value{
+A data frame representation of the interval.
 }
 \description{
-Interval to data.frame
+Convert Interval to Data Frame
 }
 \examples{
 as.data.frame(inter_city)

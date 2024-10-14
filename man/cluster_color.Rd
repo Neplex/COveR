@@ -2,16 +2,19 @@
 % Please edit documentation in R/tools.R
 \name{cluster_color}
 \alias{cluster_color}
-\title{Clustering color for plotting.}
+\title{Clustering Color for Plotting}
 \usage{
 cluster_color(x)
 }
 \arguments{
-\item{x}{A cluster.}
+\item{x}{A clustering vector or matrix.}
+}
+\value{
+A vector of colors corresponding to the clustering assignments.
 }
 \description{
-Get color from clustering cluster for data plotting.
+Generate colors for data points based on their clustering assignments.
 }
 \examples{
-plot(iris[,1:2], col=cluster_color(neokm(iris, 2, .2, .05)$cluster))
+plot(iris[, 1:2], col = cluster_color(neokm(iris, 2, 0.2, 0.05)$cluster))
 }

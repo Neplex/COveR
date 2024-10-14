@@ -2,26 +2,31 @@
 % Please edit documentation in R/okm.R
 \name{okm}
 \alias{okm}
-\title{OKM clustering.}
+\title{OKM Clustering}
 \usage{
-okm(X, centers, iter.max = 10, nstart = 1, trace = FALSE, method = "euclid")
+okm(x, centers, iter.max = 10, nstart = 1, trace = FALSE, method = "euclid")
 }
 \arguments{
-\item{X}{A data.}
+\item{x}{A data matrix.}
 
-\item{centers}{A number or matrix, number of cluster for clustering or pre init centers.}
+\item{centers}{A number or matrix representing the number of clusters or
+pre-initialized centers.}
 
-\item{iter.max}{the maximum number of iterations allowed.}
+\item{iter.max}{Maximum number of iterations allowed.}
 
-\item{nstart}{A number, number of execution to find the best result.}
+\item{nstart}{Number of executions to find the best result.}
 
-\item{trace}{A boolean, tracing information on the progress of the algorithm is produced.}
+\item{trace}{Logical, if TRUE, trace progress of the algorithm.}
 
-\item{method}{A string ('euclid': Euclidian distance, 'manhattan': Manhattan distance).}
+\item{method}{A string specifying the distance method ('euclid' or
+'manhattan').}
+}
+\value{
+A list representing the clustering results.
 }
 \description{
-Overlapping Kmeans algorithm.
+Overlapping K-Means clustering algorithm.
 }
 \examples{
-okm(iris[,-5], 3)
+okm(iris[, -5], 3)
 }

@@ -2,15 +2,15 @@
 % Please edit documentation in R/ikmeans.R
 \name{print.ikmeans}
 \alias{print.ikmeans}
-\title{Ikmeans print}
+\title{Print Method for Ikmeans Clustering}
 \usage{
 \method{print}{ikmeans}(x, ...)
 }
 \arguments{
-\item{x}{An IKmeans object.}
+\item{x}{An ikmeans object.}
 
-\item{...}{Other options from print.}
+\item{...}{Additional arguments passed to the print method.}
 }
 \description{
-Print override for ikmeans
+Print method for displaying results of ikmeans clustering.
 }

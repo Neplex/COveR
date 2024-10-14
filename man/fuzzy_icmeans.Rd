@@ -2,7 +2,7 @@
 % Please edit documentation in R/fuzzy_icmeans.R
 \name{fuzzy_icmeans}
 \alias{fuzzy_icmeans}
-\title{Interval fuzzy cmeans clustering.}
+\title{Interval Fuzzy C-Means Clustering}
 \usage{
 fuzzy_icmeans(
   x,
@@ -15,24 +15,28 @@ fuzzy_icmeans(
 )
 }
 \arguments{
-\item{x}{An 3D interval array.}
+\item{x}{A 3D interval array.}
 
-\item{centers}{A number or interval, number of cluster for clustering or pre init centers.}
+\item{centers}{Either the number of clusters or pre-initialized centers.}
 
 \item{m}{A number greater than 1 giving the degree of fuzzification.}
 
-\item{nstart}{A number, number of execution to find the best result.}
+\item{nstart}{Number of executions to find the best result.}
 
-\item{distance}{A string ('euclid': Euclidian distance, 'hausdorff': Hausdorff distance).}
+\item{distance}{A string specifying the distance ('euclid', 'hausdorff').}
 
-\item{trace}{A boolean, tracing information on the progress of the algorithm is produced.}
+\item{trace}{Logical, if TRUE, tracing information on the progress of the
+algorithm is produced.}
 
-\item{iter.max}{the maximum number of iterations allowed.}
+\item{iter.max}{Maximum number of iterations allowed.}
+}
+\value{
+A list representing the clustering results.
 }
 \description{
-Culster interval data with fuzzy cmeans algorithm.
+Cluster interval data using the fuzzy c-means algorithm.
 }
 \examples{
-fuzzy_icmeans(iaggregate(iris, col=5), 2)
-fuzzy_icmeans(iaggregate(iris, col=5), iaggregate(iris, col=5))
+fuzzy_icmeans(iaggregate(iris, col = 5), 2)
+fuzzy_icmeans(iaggregate(iris, col = 5), iaggregate(iris, col = 5))
 }

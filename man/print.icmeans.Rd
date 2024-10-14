@@ -2,15 +2,15 @@
 % Please edit documentation in R/fuzzy_icmeans.R
 \name{print.icmeans}
 \alias{print.icmeans}
-\title{Fuzzy Icmeans print}
+\title{Print Method for Fuzzy Icmeans Clustering}
 \usage{
 \method{print}{icmeans}(x, ...)
 }
 \arguments{
 \item{x}{An icmeans object.}
 
-\item{...}{Other options from print.}
+\item{...}{Additional arguments passed to the print method.}
 }
 \description{
-Print override for fuzzy icmeans
+Print method for displaying results of fuzzy icmeans clustering.
 }

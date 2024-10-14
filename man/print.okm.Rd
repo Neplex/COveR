@@ -2,15 +2,15 @@
 % Please edit documentation in R/okm.R
 \name{print.okm}
 \alias{print.okm}
-\title{OKM print}
+\title{Print Method for OKM Clustering}
 \usage{
 \method{print}{okm}(x, ...)
 }
 \arguments{
 \item{x}{An OKM object.}
 
-\item{...}{Other options from print.}
+\item{...}{Additional arguments passed to the print method.}
 }
 \description{
-Print override for OKM
+Print method for displaying results of OKM clustering.
 }

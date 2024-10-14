@@ -1,72 +1,66 @@
-#' neokm clustering.
+#' NEOKM Clustering
 #'
-#' Culster data with neokm algorithm.
+#' Cluster data using the NEOKM algorithm.
 #' @useDynLib COveR, .registration = TRUE
-#'
-#' @param x An data matrix.
-#' @param centers A number, number of cluster for clustering or pre init centers.
-#' @param alpha A number (overlap).
-#' @param beta A number (non-exhaustiveness).
-#' @param nstart A number, number of execution to find the best result.
-#' @param trace A boolean, tracing information on the progress of the algorithm is produced.
-#' @param iter.max the maximum number of iterations allowed.
-#'
+#' @param x A data matrix.
+#' @param centers The number of clusters or pre-initialized centers.
+#' @param alpha A number representing overlap.
+#' @param beta A number representing non-exhaustiveness.
+#' @param nstart Number of executions to find the best result.
+#' @param trace Logical, if TRUE, trace progress of the algorithm.
+#' @param iter.max Maximum number of iterations allowed.
+#' @return A list representing the clustering results.
 #' @export
-#'
 #' @examples
-#' neokm(iris[,-5], 3)
-#' neokm(iris[,-5], iris[,-5], 1, 2)
-neokm <- function(x, centers, alpha = 0.3, beta = 0.05, nstart = 10, trace = FALSE,
-  iter.max = 20) {
+#' neokm(iris[, -5], 3)
+#' neokm(iris[, -5], iris[, -5], 1, 2)
+neokm <- function(  # nolint cyclocomp_linter
+  x, centers,
+  alpha = 0.3,
+  beta = 0.05,
+  nstart = 10,
+  trace = FALSE,
+  iter.max = 20  # nolint object_name_linter
+) {
 
-  nc <- 0
-  c <- NULL
+  # Check input validity
+  stopifnot(
+    "Data must be a numeric matrix or data frame" = is.data.frame(x) ||
+      is.matrix(x) ||
+      is.numeric(x),
+    "'alpha' must be numeric" = is.numeric(alpha),
+    "'beta' must be numeric" = is.numeric(beta),
+    "'nstart' must be > 0" = is.numeric(nstart) && nstart > 0,
+    "'trace' must be logical" = is.logical(trace),
+    "'iter.max' must be > 0" = is.numeric(iter.max) && iter.max > 0
+  )
 
-  # Arguments check
-  if (!is.data.frame(x) && !is.matrix(x) && !is.numeric(x))
-    stop("Data must be numeric matrix")
-
+  # Handle centers input
   if (length(centers) == 1) {
     if (centers > 0 && centers <= nrow(x)) {
       nc <- centers
+      c <- NULL
     } else {
-      stop("The number of clusters must be between 1 and number of row")
+      stop("The number of clusters must be between 1 and the number of rows.")
     }
-
-  } else if (is.numeric(centers) || is.data.frame(centers) || is.matrix(centers) ||
-    is.vector(centers)) {
+  } else if (is.numeric(centers) || is.data.frame(centers) ||
+               is.matrix(centers) || is.vector(centers)) {
     centers <- as.matrix(data.matrix(centers))
+    if (ncol(centers) != ncol(x)) {
+      stop("'x' and 'centers' must have the same number of dimensions.")
+    }
     nc <- nrow(centers)
     c <- as.numeric(as.vector(centers))
-    if (ncol(centers) != ncol(x))
-      stop("x and centers must have the same number of dimensions")
+  } else {
+    stop("'centers' must be a number, vector, or matrix.")
+  }
 
-  } else stop("centers must be double, vector or matrix")
-
-  if (!is.numeric(alpha))
-    stop("alpha must be numeric")
-
-  if (!is.numeric(beta))
-    stop("beta must be numeric")
-
-  if (!is.numeric(nstart))
-    stop("nstart must be numeric")
-  if (nstart <= 0)
-    stop("nstart must be positive")
-
-  if (!is.logical(trace))
-    stop("trace must be logical")
-
-  if (!is.numeric(iter.max))
-    stop("iter.max must be numeric")
-  if (iter.max <= 0)
-    stop("iter.max must be positive")
-
-  # Call
-  v <- as.numeric(as.vector(data.matrix(x)))
-  c <- .Call("_neokm", v, nrow(x), ncol(x), nc, alpha, beta, nstart, trace, iter.max,
-    c)
-
+  # Call the underlying C function for NEOKM clustering
+  v <- as.numeric(unlist(x))
+  c <- .Call(
+    "_neokm", v, nrow(x), ncol(x),
+    nc, alpha, beta, nstart, trace, iter.max, c
+  )
 
   cluster <- data.matrix(c[[1]])
   centers <- data.matrix(c[[2]])
@@ -78,31 +72,38 @@ neokm <- function(x, centers, alpha = 0.3, beta = 0.05, nstart = 10, trace = FAL
   iter <- c[[6]]
   over <- mean(rowSums(cluster))
 
-  # Result
-  structure(list(cluster = cluster, centers = centers, totss = totss, withinss = wss,
-    tot.withinss = totwss, betweenss = bss, size = size, iter = iter, overlaps = over),
-    class = "neokm")
+  # Return the clustering results as a structured list
+  structure(list(
+    cluster = cluster,
+    centers = centers,
+    totss = totss,
+    withinss = wss,
+    tot.withinss = totwss,
+    betweenss = bss,
+    size = size,
+    iter = iter,
+    overlaps = over
+  ), class = "neokm")
 }
 
-#' NEOKM print
+#' Print Method for NEOKM Clustering
 #'
-#' Print override for NEOKM
-#'
-#' @param x An NEOKM object.
-#' @param ... Other options from print.
-#'
+#' Print method for displaying results of NEOKM clustering.
+#' @param x A NEOKM object.
+#' @param ... Additional arguments passed to the print method.
 #' @export
 print.neokm <- function(x, ...) {
-  cat("NEOKM clustering with ", length(x$size), " clusters of sizes ", paste(x$size,
-    collapse = ", "), "\n", sep = "")
-  cat("\nCluster means:\n")
+  cat("NEOKM clustering with", length(x$size), "clusters of sizes:",
+      paste(x$size, collapse = ", "), "\n")
+  cat("\nCluster centers:\n")
   print(x$centers, ...)
   cat("\nClustering matrix:\n")
   print(x$cluster, ...)
-  cat("\nWithin cluster sum of squares by cluster:\n")
+  cat("\nWithin-cluster sum of squares by cluster:\n")
   print(x$withinss, ...)
-  cat(sprintf(" (between_SS / total_SS = %5.1f %%)\n", 100 * x$betweenss/x$totss),
-    "Available components:\n", sep = "\n")
+  cat(sprintf(" (Between_SS / Total_SS = %5.1f%%)\n",
+              100 * x$betweenss / x$totss))
+  cat("Available components:\n")
   print(names(x))
   invisible(x)
 }

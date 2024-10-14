@@ -5,102 +5,148 @@
 # Foundation; either version 2 of the License, or (at your option) any later
 # version.
 
-# This program is distributed in the hope that it will be useful, but WITHOUT ANY
-# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-# PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
 
 # You should have received a copy of the GNU General Public License along with
 # this program; if not, write to the author. guillaume.cleuziou@univ-orleans.fr
 
 
-#' OKM clustering.
+#' OKM Clustering
 #'
-#' Overlapping Kmeans algorithm.
+#' Overlapping K-Means clustering algorithm.
 #' @useDynLib COveR, .registration = TRUE
-#'
-#' @param X A data.
-#' @param centers A number or matrix, number of cluster for clustering or pre init centers.
-#' @param nstart A number, number of execution to find the best result.
-#' @param method A string ('euclid': Euclidian distance, 'manhattan': Manhattan distance).
-#' @param trace A boolean, tracing information on the progress of the algorithm is produced.
-#' @param iter.max the maximum number of iterations allowed.
-#'
+#' @param x A data matrix.
+#' @param centers A number or matrix representing the number of clusters or
+#' pre-initialized centers.
+#' @param iter.max Maximum number of iterations allowed.
+#' @param nstart Number of executions to find the best result.
+#' @param trace Logical, if TRUE, trace progress of the algorithm.
+#' @param method A string specifying the distance method ('euclid' or
+#' 'manhattan').
+#' @return A list representing the clustering results.
 #' @export
-#'
 #' @examples
-#' okm(iris[,-5], 3)
-okm <- function(X, centers, iter.max = 10, nstart = 1, trace = FALSE, method = "euclid") {
-  Z <- X
-  X <- as.matrix(Z)
-  if (is.null(dim(X)))
-    stop("X must be a matrix.")
-  use.nstart <- FALSE
+#' okm(iris[, -5], 3)
+okm <- function(  # nolint cyclocomp_linter
+  x, centers,
+  iter.max = 10,  # nolint object_name_linter
+  nstart = 1,
+  trace = FALSE,
+  method = "euclid"
+) {
+
+  # Check input validity
+  stopifnot(
+    "Data must be a numeric matrix or data frame." = is.data.frame(x) ||
+      is.matrix(x) ||
+      is.numeric(x),
+    "'x' must be a matrix or data frame" = is.numeric(dim(x)),
+    "'nstart' must be > 0" = is.numeric(nstart) && nstart > 0,
+    "'trace' must be logical" = is.logical(trace),
+    "'iter.max' must be > 0" = is.numeric(iter.max) && iter.max > 0
+  )
+
+  x <- as.matrix(x)
+
+  use_nstart <- FALSE
   if (is.null(dim(centers))) {
-    use.nstart <- TRUE
+    use_nstart <- TRUE
     k <- centers
-    cen <- X[sample(seq_len(nrow(X)), k), ]
+    cen <- x[sample(seq_len(nrow(x)), k), ]
   } else {
     cen <- as.matrix(centers)
     k <- nrow(cen)
-    if (ncol(cen) != ncol(X))
-      stop("X and centers must have the same number of columns.")
-    if (any(duplicated(cen)))
-      stop("Centers must be distincts.")
+    if (ncol(cen) != ncol(x)) {
+      stop("'x' and 'centers' must have the same number of columns.")
+    }
+    if (any(duplicated(cen))) stop("Centers must be distinct.")
     nstart <- 1
   }
-  if (iter.max < 0) {
-    stop("iter.max must be a null or a positive number.")
-  }
-  if (nrow(X) < k)
-    stop("More cluster than datas in X.")
 
-  if (method == "euclid")
-    method <- 1 else if (method == "manhattan")
-    method <- 2 else stop("Unknown distance computation method.")
-  U <- .C("_okm", as.double(t(X)), centers = as.double(t(cen)), as.integer(iter.max),
-    as.integer(k), as.integer(ncol(X)), as.integer(nrow(X)), clusters = integer(nrow(X) *
-      k), wss = as.double(k), over = as.double(k), as.integer(trace), 0, 0,
-    0, 0, 0, as.integer(method))
-  if (use.nstart && nstart > 1) {
+  if (nrow(x) < k) stop("More cluster than datas in 'x'.")
+
+  # Distance method selection
+  dist <- switch(
+    method,
+    "euclid" = 1,
+    "manhattan" = 2,
+    stop("Unknown distance type. Use 'euclid' or 'manhattan'.")
+  )
+
+  # Call the C function for OKM clustering
+  result <- .C(
+    "_okm", as.double(t(x)),
+    centers = as.double(t(cen)),
+    as.integer(iter.max),
+    as.integer(k),
+    as.integer(ncol(x)),
+    as.integer(nrow(x)),
+    clusters = integer(nrow(x) * k),
+    wss = as.double(k),
+    over = as.double(k),
+    as.integer(trace),
+    0, 0, 0, 0, 0,
+    as.integer(dist)
+  )
+
+  # Execute multiple starts if specified
+  if (use_nstart && nstart > 1) {
     for (i in 2:nstart) {
-      cen <- X[sample(seq_len(nrow(X)), k), ]
-      UU <- .C("_okm", as.double(t(X)), centers = as.double(t(cen)), as.integer(iter.max),
-        as.integer(k), as.integer(ncol(X)), as.integer(nrow(X)), clusters = integer(nrow(X) *
-          k), wss = as.double(k), over = as.double(k), as.integer(trace),
-        0, 0, 0, 0, 0, as.integer(method))
-      if (UU$wss < U$wss)
-        U <- UU
+      cen <- x[sample(seq_len(nrow(x)), k), ]
+      new_result <- .C(
+        "_okm",
+        as.double(t(x)),
+        centers = as.double(t(cen)),
+        as.integer(iter.max),
+        as.integer(k),
+        as.integer(ncol(x)),
+        as.integer(nrow(x)),
+        clusters = integer(nrow(x) * k),
+        wss = as.double(k),
+        over = as.double(k),
+        as.integer(trace),
+        0, 0, 0, 0, 0,
+        dist
+      )
+      if (new_result$wss < result$wss) result <- new_result
     }
   }
-  clust <- matrix(U$clusters, ncol = k, byrow = TRUE)
-  centers <- matrix(U$centers, ncol = ncol(X), nrow = k, byrow = TRUE)
-  if (!is.null(colnames(Z)))
-    colnames(centers) <- colnames(Z)
 
-  # Result
-  structure(list(cluster = clust, centers = centers, tot.withinss = U$wss, overlaps = U$over),
-    class = "okm")
+  # Process results
+  cluster <- matrix(result$clusters, ncol = k, byrow = TRUE)
+  centers <- matrix(result$centers, ncol = ncol(x), nrow = k, byrow = TRUE)
+  if (!is.null(colnames(x))) colnames(centers) <- colnames(x)
+
+  # Return the clustering results as a structured list
+  structure(list(
+    cluster = cluster,
+    centers = centers,
+    tot.withinss = result$wss,
+    overlaps = result$over
+  ), class = "okm")
 }
 
-#' OKM print
+#' Print Method for OKM Clustering
 #'
-#' Print override for OKM
-#'
+#' Print method for displaying results of OKM clustering.
 #' @param x An OKM object.
-#' @param ... Other options from print.
-#'
+#' @param ... Additional arguments passed to the print method.
 #' @export
 print.okm <- function(x, ...) {
-  cat("OKM clustering with ", length(x$size), " clusters of sizes ", paste(x$size,
-    collapse = ", "), "\n", sep = "")
-  cat("\nCluster means:\n")
+  cat("OKM clustering with", length(x$size), "clusters of sizes:",
+      paste(x$size, collapse = ", "), "\n")
+  cat("\nCluster centers:\n")
   print(x$centers, ...)
   cat("\nClustering matrix:\n")
   print(x$cluster, ...)
-  cat("\nWithin cluster sum of squares by elements:\n")
-  print(x$withinss, ...)
-  cat(sprintf(" (between_SS / total_SS = %5.1f %%)\n", 100 * x$betweenss/x$totss),
-    "Available components:\n", sep = "\n")
+  cat("\nTotal within-cluster sum of squares:\n")
+  print(x$tot.withinss, ...)
+  cat("\nOverlapping measure:\n")
+  print(x$overlaps, ...)
+  cat("Available components:\n")
   print(names(x))
   invisible(x)
 }

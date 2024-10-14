@@ -2,17 +2,20 @@
 % Please edit documentation in R/convert.R
 \name{as.matrix.interval}
 \alias{as.matrix.interval}
-\title{Interval to matrix}
+\title{Convert Interval to Matrix}
 \usage{
 \method{as.matrix}{interval}(x, ...)
 }
 \arguments{
-\item{x}{an interval.}
+\item{x}{An interval object.}
 
-\item{...}{additional arguments to be passed to or from methods.}
+\item{...}{Additional arguments to be passed to or from methods.}
+}
+\value{
+A matrix representation of the interval.
 }
 \description{
-Interval to matrix
+Convert Interval to Matrix
 }
 \examples{
 as.matrix(inter_city)

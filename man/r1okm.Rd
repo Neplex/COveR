@@ -2,28 +2,31 @@
 % Please edit documentation in R/r1okm.R
 \name{r1okm}
 \alias{r1okm}
-\title{r1okm clustering.}
+\title{R1-OKM Clustering}
 \usage{
 r1okm(x, centers, alpha = 0, nstart = 10, trace = FALSE, iter.max = 20)
 }
 \arguments{
-\item{x}{An data matrix.}
+\item{x}{A data matrix.}
 
-\item{centers}{A number, number of cluster for clustering or pre init centers.}
+\item{centers}{The number of clusters or a matrix of initial centers.}
 
-\item{alpha}{A number.}
+\item{alpha}{A numeric parameter controlling clustering behavior.}
 
-\item{nstart}{A number, number of execution to find the best result.}
+\item{nstart}{Number of executions to find the best result.}
 
-\item{trace}{A boolean, tracing information on the progress of the algorithm is produced.}
+\item{trace}{Logical, if TRUE, provides progress information.}
 
-\item{iter.max}{the maximum number of iterations allowed.}
+\item{iter.max}{Maximum number of iterations allowed.}
+}
+\value{
+A list representing the clustering results.
 }
 \description{
-Culster data with r1okm algorithm.
+Cluster data using the R1OKM algorithm.
 }
 \examples{
-r1okm(iris[,-5], 3)
-r1okm(iris[,-5], 3, -0.5)
-r1okm(iris[,-5], iris[,-5], 1)
+r1okm(iris[, -5], 3)
+r1okm(iris[, -5], 3, alpha = -0.5)
+r1okm(iris[, -5], iris[, -5], alpha = 1)
 }

@@ -2,15 +2,18 @@
 % Please edit documentation in R/convert.R
 \name{as.interval.numeric}
 \alias{as.interval.numeric}
-\title{numeric to interval}
+\title{Convert Numeric to Interval}
 \usage{
 \method{as.interval}{numeric}(x)
 }
 \arguments{
-\item{x}{an interval.}
+\item{x}{A numeric vector.}
+}
+\value{
+An interval object constructed from the numeric vector.
 }
 \description{
-numeric to interval
+Convert Numeric to Interval
 }
 \examples{
 as.interval(1:6)

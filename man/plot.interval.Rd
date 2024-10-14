@@ -2,23 +2,20 @@
 % Please edit documentation in R/interval.R
 \name{plot.interval}
 \alias{plot.interval}
-\title{Interval plotting.}
+\title{Plot Interval Data}
 \usage{
 \method{plot}{interval}(x, ...)
 }
 \arguments{
-\item{x}{An interval.}
+\item{x}{An interval object.}
 
-\item{...}{:
-- 'col' Colors of rectangles.
-- 'add' Add to exsiting plot or not.
-- Other options from plot.}
+\item{...}{Additional graphical parameters such as 'col' and 'add'.}
 }
 \description{
-plot for interval.
+Create a plot representation of interval data.
 }
 \examples{
 plot(iaggregate(iris, 5))
-plot(iaggregate(iris, 5), col=4)
-plot(iaggregate(iris, 5), add=TRUE)
+plot(iaggregate(iris, 5), col = 4)
+plot(iaggregate(iris, 5), add = TRUE)
 }

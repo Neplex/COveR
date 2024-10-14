@@ -2,7 +2,7 @@
 % Please edit documentation in R/iokm.R
 \name{iokm}
 \alias{iokm}
-\title{Interval okm clustering.}
+\title{Interval OKM Clustering}
 \usage{
 iokm(
   x,
@@ -17,28 +17,31 @@ iokm(
 )
 }
 \arguments{
-\item{x}{An 3D interval array.}
+\item{x}{A 3D interval array.}
 
-\item{centers}{A number or interval, number of cluster for clustering or pre init centers.}
+\item{centers}{Either the number of clusters or pre-initialized centers.}
 
-\item{nstart}{A number, number of execution to find the best result.}
+\item{nstart}{Number of executions to find the best result.}
 
-\item{distance}{A string ('euclid': Euclidian distance, 'hausdorff': Hausdorff distance).}
+\item{distance}{Distance measure ('euclid', 'hausdorff').}
 
-\item{algorithm}{A string ('std': Standard algorithm, 'matrix': Matrix algorithm).}
+\item{algorithm}{Algorithm type ('std': Standard, 'matrix': Matrix).}
 
-\item{update}{A string ('mean': Mean center, 'sum': Sum center, 'join': Union center, 'meet': Intersect center).}
+\item{update}{Update method ('mean', 'sum', 'join', 'meet').}
 
-\item{trace}{A boolean, tracing information on the progress of the algorithm is produced.}
+\item{trace}{Logical, if TRUE, trace progress of the algorithm.}
 
-\item{iter.max}{the maximum number of iterations allowed.}
+\item{iter.max}{Maximum number of iterations allowed.}
 
-\item{secure}{A boolean (secure interval or not : min <= max).}
+\item{secure}{Logical, if TRUE, ensures min <= max in intervals.}
+}
+\value{
+A list representing the clustering results.
 }
 \description{
-Culster interval data with okm algorithm.
+Cluster interval data using the OKM algorithm.
 }
 \examples{
-iokm(iaggregate(iris, col=5), 2)
-iokm(iaggregate(iris, col=5), iaggregate(iris, col=5))
+iokm(iaggregate(iris, col = 5), 2)
+iokm(iaggregate(iris, col = 5), iaggregate(iris, col = 5))
 }

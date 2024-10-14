@@ -2,17 +2,20 @@
 % Please edit documentation in R/convert.R
 \name{as.vector.interval}
 \alias{as.vector.interval}
-\title{Interval to vector}
+\title{Convert Interval to Vector}
 \usage{
 \method{as.vector}{interval}(x, ...)
 }
 \arguments{
-\item{x}{an interval.}
+\item{x}{An interval object.}
 
-\item{...}{additional arguments to be passed to or from methods.}
+\item{...}{Additional arguments to be passed to or from methods.}
+}
+\value{
+A vector representation of the interval.
 }
 \description{
-Interval to vector
+Convert Interval to Vector
 }
 \examples{
 as.vector(inter_city)

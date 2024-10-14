@@ -1,27 +1,39 @@
-#' Clustering color for plotting.
+#' Clustering Color for Plotting
 #'
-#' Get color from clustering cluster for data plotting.
+#' Generate colors for data points based on their clustering assignments.
 #'
-#' @param x A cluster.
-#'
+#' @param x A clustering vector or matrix.
+#' @return A vector of colors corresponding to the clustering assignments.
 #' @importFrom grDevices col2rgb rainbow rgb
 #' @importFrom stats model.matrix
-#'
 #' @export
-#'
 #' @examples
-#' plot(iris[,1:2], col=cluster_color(neokm(iris, 2, .2, .05)$cluster))
+#' plot(iris[, 1:2], col = cluster_color(neokm(iris, 2, 0.2, 0.05)$cluster))
 cluster_color <- function(x) {
-  nb_elem <- ifelse(is.matrix(x), nrow(x), length(x))
-  if (!is.matrix(x))
-    x <- matrix(as.logical(model.matrix(~factor(x) - 1)), nrow = nb_elem)
-  x <- t(apply(x, 1, function(x) x/sum(x)))  # normalize
-  x[is.na(x)] <- 0  # remove NA (no class -> black color)
-  c <- col2rgb(rainbow(ncol(x)))
-  apply(x, 1, function(x) {
-    r <- sum(c[1, ] * x)
-    v <- sum(c[2, ] * x)
-    b <- sum(c[3, ] * x)
-    rgb(r, v, b, maxColorValue = 255)
+  # Determine the number of elements in the cluster
+  nb_elem <- if (is.matrix(x)) nrow(x) else length(x)
+
+  # Convert clustering vector to matrix form if necessary
+  if (!is.matrix(x)) {
+    x <- matrix(as.logical(model.matrix(~ factor(x) - 1)), nrow = nb_elem)
+  }
+
+  # Generate rainbow colors for each cluster
+  cluster_colors <- col2rgb(rainbow(ncol(x)))
+
+  # Normalize matrix rows and compute the colors
+  apply(x, 1, function(row) {
+    row_sum <- sum(row)
+    if (row_sum > 0) {
+      row <- row / row_sum  # Normalize the row
+    } else {
+      row[] <- 0  # Handle cases where the sum is zero (no class -> black color)
+    }
+
+    # Compute the RGB values based on normalized row values
+    r <- sum(cluster_colors[1, ] * row)
+    g <- sum(cluster_colors[2, ] * row)
+    b <- sum(cluster_colors[3, ] * row)
+    rgb(r, g, b, maxColorValue = 255)
   })
 }

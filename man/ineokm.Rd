@@ -2,7 +2,7 @@
 % Please edit documentation in R/ineokm.R
 \name{ineokm}
 \alias{ineokm}
-\title{Interval neokm clustering.}
+\title{Interval Neo-KM Clustering}
 \usage{
 ineokm(
   x,
@@ -15,24 +15,27 @@ ineokm(
 )
 }
 \arguments{
-\item{x}{An 3D interval array.}
+\item{x}{A 3D interval array.}
 
-\item{centers}{A number or interval, number of cluster for clustering or pre init centers.}
+\item{centers}{Either the number of clusters or pre-initialized centers.}
 
-\item{alpha}{A number (overlap).}
+\item{alpha}{A numeric value representing overlap.}
 
-\item{beta}{A number (non-exhaustiveness).}
+\item{beta}{A numeric value representing non-exhaustiveness.}
 
-\item{nstart}{A number, number of execution to find the best result.}
+\item{nstart}{Number of executions to find the best result.}
 
-\item{trace}{A boolean, tracing information on the progress of the algorithm is produced.}
+\item{trace}{Logical, if TRUE, trace progress of the algorithm.}
 
-\item{iter.max}{the maximum number of iterations allowed.}
+\item{iter.max}{Maximum number of iterations allowed.}
+}
+\value{
+A list representing the clustering results.
 }
 \description{
-Culster interval data with neokm algorithm.
+Cluster interval data using the Neo-KM algorithm.
 }
 \examples{
-ineokm(iaggregate(iris, col=5), 3)
-ineokm(iaggregate(iris, col=5), iaggregate(iris, col=5), 1, 2)
+ineokm(iaggregate(iris, col = 5), 3)
+ineokm(iaggregate(iris, col = 5), iaggregate(iris, col = 5), 1, 2)
 }

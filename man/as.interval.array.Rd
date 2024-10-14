@@ -2,13 +2,16 @@
 % Please edit documentation in R/convert.R
 \name{as.interval.array}
 \alias{as.interval.array}
-\title{array to interval}
+\title{Convert Array to Interval}
 \usage{
 \method{as.interval}{array}(x)
 }
 \arguments{
-\item{x}{an interval.}
+\item{x}{An array object.}
+}
+\value{
+An interval object constructed from the array or attempts conversion.
 }
 \description{
-array to interval
+Convert Array to Interval
 }

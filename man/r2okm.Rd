@@ -2,28 +2,31 @@
 % Please edit documentation in R/r2okm.R
 \name{r2okm}
 \alias{r2okm}
-\title{r2okm clustering.}
+\title{R2-OKM Clustering}
 \usage{
 r2okm(x, centers, lambda = 0, nstart = 10, trace = FALSE, iter.max = 20)
 }
 \arguments{
-\item{x}{An data matrix.}
+\item{x}{A data matrix.}
 
-\item{centers}{A number, number of cluster for clustering or pre init centers.}
+\item{centers}{The number of clusters or a matrix of initial centers.}
 
-\item{lambda}{A number.}
+\item{lambda}{A numeric parameter controlling clustering behavior.}
 
-\item{nstart}{A number, number of execution to find the best result.}
+\item{nstart}{Number of executions to find the best result.}
 
-\item{trace}{A boolean, tracing information on the progress of the algorithm is produced.}
+\item{trace}{Logical, if TRUE, provides progress information.}
 
-\item{iter.max}{the maximum number of iterations allowed.}
+\item{iter.max}{Maximum number of iterations allowed.}
+}
+\value{
+A list representing the clustering results.
 }
 \description{
-Culster data with r2okm algorithm.
+Cluster data using the R2OKM algorithm.
 }
 \examples{
-r2okm(iris[,-5], 3)
-r2okm(iris[,-5], 3, .3)
-r2okm(iris[,-5], iris[,-5], 1)
+r2okm(iris[, -5], 3)
+r2okm(iris[, -5], 3, lambda = 0.3)
+r2okm(iris[, -5], iris[, -5], lambda = 1)
 }

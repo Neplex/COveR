@@ -2,15 +2,18 @@
 % Please edit documentation in R/convert.R
 \name{as.interval.matrix}
 \alias{as.interval.matrix}
-\title{matrix to interval}
+\title{Convert Matrix to Interval}
 \usage{
 \method{as.interval}{matrix}(x)
 }
 \arguments{
-\item{x}{an interval.}
+\item{x}{A matrix object.}
+}
+\value{
+An interval object constructed from the matrix.
 }
 \description{
-matrix to interval
+Convert Matrix to Interval
 }
 \examples{
 as.interval(matrix(1:12, 3, 4))

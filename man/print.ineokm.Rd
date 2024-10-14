@@ -2,15 +2,15 @@
 % Please edit documentation in R/ineokm.R
 \name{print.ineokm}
 \alias{print.ineokm}
-\title{Ineokm print}
+\title{Print Method for Ineokm Clustering}
 \usage{
 \method{print}{ineokm}(x, ...)
 }
 \arguments{
-\item{x}{An IKmeans object.}
+\item{x}{An ineokm object.}
 
-\item{...}{Other options from print.}
+\item{...}{Additional arguments passed to the print method.}
 }
 \description{
-Print override for ineokm
+Print method for displaying results of ineokm clustering.
 }
