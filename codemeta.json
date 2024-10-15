@@ -56,7 +56,7 @@
         "R",
         "C"
     ],
-    "version": "1.0.3",
+    "version": "1.0.4",
     "contIntegration": "https://github.com/Neplex/COveR/actions",
     "codemeta:continuousIntegration": {
         "id": "https://github.com/Neplex/COveR/actions"
