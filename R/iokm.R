@@ -1,17 +1,35 @@
-#' Interval OKM Clustering
+#' Clusters interval data using the OKM (Overlapping K-means) algorithm.
 #'
-#' Cluster interval data using the OKM algorithm.
+#' @param x A 3D interval array representing the data to be clustered.
+#' @param centers Either the number of clusters to create or a set of
+#' pre-initialized cluster centers. If a number is provided, it indicates how
+#' many clusters to create.
+#' @param nstart The number of times to run the OKM algorithm with different
+#' starting values to find the best result (default is 10).
+#' @param distance A string specifying the distance metric to use: 'euclid' for
+#' Euclidean distance or 'hausdorff' for Hausdorff distance (default is
+#' 'euclid').
+#' @param algorithm A string specifying the algorithm type to use: 'std' for the
+#' standard algorithm or 'matrix' for matrix-based algorithm (default is 'std').
+#' @param update A string specifying the update method for cluster centers.
+#' Either: 'mean', 'sum', 'join' or 'meet' (default is 'mean').
+#' @param trace Logical value indicating whether to show progress of the
+#' algorithm (default is `FALSE`).
+#' @param iter.max Maximum number of iterations allowed for the OKM algorithm
+#' (default is 20).
+#' @param secure Logical value indicating whether to ensure that the minimum is
+#' less than or equal to the maximum in intervals (default is `FALSE`).
+#' @return A list of clustering results, including:
+#'   - `cluster`: Matrix indicating the cluster assignment for each data point.
+#'   - `centers`: The final cluster centers.
+#'   - `totss`: Total sum of squares.
+#'   - `withinss`: Within-cluster sum of squares by elements.
+#'   - `tot.withinss`: Total within-cluster sum of squares.
+#'   - `betweenss`: Between-cluster sum of squares.
+#'   - `size`: The number of points in each cluster.
+#'   - `iter`: The number of iterations the algorithm executed.
+#'   - `overlaps`: The average overlap across clusters.
 #' @useDynLib COveR, .registration = TRUE
-#' @param x A 3D interval array.
-#' @param centers Either the number of clusters or pre-initialized centers.
-#' @param nstart Number of executions to find the best result.
-#' @param distance Distance measure ('euclid', 'hausdorff').
-#' @param algorithm Algorithm type ('std': Standard, 'matrix': Matrix).
-#' @param update Update method ('mean', 'sum', 'join', 'meet').
-#' @param trace Logical, if TRUE, trace progress of the algorithm.
-#' @param iter.max Maximum number of iterations allowed.
-#' @param secure Logical, if TRUE, ensures min <= max in intervals.
-#' @return A list representing the clustering results.
 #' @export
 #' @examples
 #' iokm(iaggregate(iris, col = 5), 2)
@@ -130,11 +148,11 @@ iokm <- function(  # nolint cyclocomp_linter
   ), class = "iokm")
 }
 
-#' Print Method for IOKM Clustering
+#' Displays the results of IOKM clustering in a user-friendly format.
 #'
-#' Print method for displaying results of IOKM clustering.
-#' @param x An IOKM object.
-#' @param ... Additional arguments passed to the print method.
+#' @param x An `iokm` object resulting from the `iokm` function.
+#' @param ... Additional arguments passed to print().
+#' @return No return value, it prints the clustering results to the console.
 #' @export
 print.iokm <- function(x, ...) {
   cat("IOKM clustering with", length(x$size), "clusters of sizes:",

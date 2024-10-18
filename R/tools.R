@@ -1,9 +1,14 @@
-#' Clustering Color for Plotting
+#' Generate Colors for Clustering Visualization
 #'
-#' Generate colors for data points based on their clustering assignments.
+#' Generates a color for each data point based on its clustering assignment,
+#' facilitating visual distinction of clusters in plots.
 #'
-#' @param x A clustering vector or matrix.
-#' @return A vector of colors corresponding to the clustering assignments.
+#' @param x A clustering vector or a matrix. If a vector is provided, it
+#' represents the cluster assignments for each data point. If a matrix is
+#' provided, each row should represent a data point's membership across multiple
+#' clusters.
+#' @return A character vector of colors (in hexadecimal format) corresponding to
+#' the clustering assignments, suitable for use in plotting functions.
 #' @importFrom grDevices col2rgb rainbow rgb
 #' @importFrom stats model.matrix
 #' @export

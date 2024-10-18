@@ -2,20 +2,21 @@
 % Please edit documentation in R/convert.R
 \name{as.matrix.interval}
 \alias{as.matrix.interval}
-\title{Convert Interval to Matrix}
+\title{Converts an interval object to a matrix representation.}
 \usage{
 \method{as.matrix}{interval}(x, ...)
 }
 \arguments{
-\item{x}{An interval object.}
+\item{x}{An interval object to be converted.}
 
-\item{...}{Additional arguments to be passed to or from methods.}
+\item{...}{Additional arguments to be passed to as.vector().}
 }
 \value{
-A matrix representation of the interval.
+A matrix representation of the interval, with two columns for each
+interval's minimum and maximum values.
 }
 \description{
-Convert Interval to Matrix
+Each interval is expanded into its minimum and maximum bounds.
 }
 \examples{
 as.matrix(inter_city)

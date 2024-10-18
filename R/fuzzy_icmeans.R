@@ -1,16 +1,33 @@
-#' Interval Fuzzy C-Means Clustering
+#' Performs fuzzy c-means clustering on interval data, allowing for soft
+#' clustering of data points into multiple clusters.
 #'
-#' Cluster interval data using the fuzzy c-means algorithm.
+#' @param x A 3D interval array representing the data to be clustered.
+#' @param centers Either the number of clusters or a set of pre-initialized
+#' cluster centers. If a number is provided, it specifies how many clusters to
+#' create.
+#' @param m A number greater than 1 that controls the degree of fuzziness in the
+#' clustering process (default is 2).
+#' @param nstart Number of times to run the clustering algorithm with different
+#' starting values to find the best solution (default is 2).
+#' @param distance A string specifying the distance metric to use, either
+#' 'euclid' for Euclidean distance or 'hausdorff' for Hausdorff distance
+#' (default is 'euclid').
+#' @param trace Logical, if `TRUE`, tracing information on the progress of the
+#' algorithm is displayed (default is `FALSE`).
+#' @param iter.max Maximum number of iterations allowed for the clustering
+#' algorithm (default is 40).
+#' @return A list of clustering results, including:
+#'   - `cluster`: The membership matrix indicating the degree of belonging of
+#'                each data point to each cluster.
+#'   - `centers`: The final cluster centers.
+#'   - `totss`: Total sum of squares.
+#'   - `withinss`: Within-cluster sum of squares by cluster.
+#'   - `tot.withinss`: Total within-cluster sum of squares.
+#'   - `betweenss`: Between-cluster sum of squares.
+#'   - `size`: Sizes of each cluster.
+#'   - `iter`: Number of iterations run by the algorithm.
+#'   - `overlaps`: The average overlap among clusters.
 #' @useDynLib COveR, .registration = TRUE
-#' @param x A 3D interval array.
-#' @param centers Either the number of clusters or pre-initialized centers.
-#' @param m A number greater than 1 giving the degree of fuzzification.
-#' @param nstart Number of executions to find the best result.
-#' @param distance A string specifying the distance ('euclid', 'hausdorff').
-#' @param trace Logical, if TRUE, tracing information on the progress of the
-#' algorithm is produced.
-#' @param iter.max Maximum number of iterations allowed.
-#' @return A list representing the clustering results.
 #' @export
 #' @examples
 #' fuzzy_icmeans(iaggregate(iris, col = 5), 2)
@@ -104,11 +121,11 @@ fuzzy_icmeans <- function(  # nolint cyclocomp_linter
   ), class = "icmeans")
 }
 
-#' Print Method for Fuzzy Icmeans Clustering
+#' Displays the results of fuzzy icmeans clustering in a readable format.
 #'
-#' Print method for displaying results of fuzzy icmeans clustering.
-#' @param x An icmeans object.
-#' @param ... Additional arguments passed to the print method.
+#' @param x An `icmeans` object resulting from the `fuzzy_icmeans` function.
+#' @param ... Additional arguments passed to print().
+#' @return No return value, it prints the clustering results to the console.
 #' @export
 print.icmeans <- function(x, ...) {
   cat("Fuzzy Icmeans clustering with", length(x$size), "clusters of sizes:",

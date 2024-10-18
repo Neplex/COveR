@@ -2,7 +2,7 @@
 % Please edit documentation in R/iokm.R
 \name{iokm}
 \alias{iokm}
-\title{Interval OKM Clustering}
+\title{Clusters interval data using the OKM (Overlapping K-means) algorithm.}
 \usage{
 iokm(
   x,
@@ -17,29 +17,48 @@ iokm(
 )
 }
 \arguments{
-\item{x}{A 3D interval array.}
+\item{x}{A 3D interval array representing the data to be clustered.}
 
-\item{centers}{Either the number of clusters or pre-initialized centers.}
+\item{centers}{Either the number of clusters to create or a set of
+pre-initialized cluster centers. If a number is provided, it indicates how
+many clusters to create.}
 
-\item{nstart}{Number of executions to find the best result.}
+\item{nstart}{The number of times to run the OKM algorithm with different
+starting values to find the best result (default is 10).}
 
-\item{distance}{Distance measure ('euclid', 'hausdorff').}
+\item{distance}{A string specifying the distance metric to use: 'euclid' for
+Euclidean distance or 'hausdorff' for Hausdorff distance (default is
+'euclid').}
 
-\item{algorithm}{Algorithm type ('std': Standard, 'matrix': Matrix).}
+\item{algorithm}{A string specifying the algorithm type to use: 'std' for the
+standard algorithm or 'matrix' for matrix-based algorithm (default is 'std').}
 
-\item{update}{Update method ('mean', 'sum', 'join', 'meet').}
+\item{update}{A string specifying the update method for cluster centers.
+Either: 'mean', 'sum', 'join' or 'meet' (default is 'mean').}
 
-\item{trace}{Logical, if TRUE, trace progress of the algorithm.}
+\item{trace}{Logical value indicating whether to show progress of the
+algorithm (default is `FALSE`).}
 
-\item{iter.max}{Maximum number of iterations allowed.}
+\item{iter.max}{Maximum number of iterations allowed for the OKM algorithm
+(default is 20).}
 
-\item{secure}{Logical, if TRUE, ensures min <= max in intervals.}
+\item{secure}{Logical value indicating whether to ensure that the minimum is
+less than or equal to the maximum in intervals (default is `FALSE`).}
 }
 \value{
-A list representing the clustering results.
+A list of clustering results, including:
+  - `cluster`: Matrix indicating the cluster assignment for each data point.
+  - `centers`: The final cluster centers.
+  - `totss`: Total sum of squares.
+  - `withinss`: Within-cluster sum of squares by elements.
+  - `tot.withinss`: Total within-cluster sum of squares.
+  - `betweenss`: Between-cluster sum of squares.
+  - `size`: The number of points in each cluster.
+  - `iter`: The number of iterations the algorithm executed.
+  - `overlaps`: The average overlap across clusters.
 }
 \description{
-Cluster interval data using the OKM algorithm.
+Clusters interval data using the OKM (Overlapping K-means) algorithm.
 }
 \examples{
 iokm(iaggregate(iris, col = 5), 2)

@@ -10,8 +10,11 @@
 \item{x}{An interval object.}
 }
 \value{
-The interval object itself.
+The input interval object, without modification.
 }
 \description{
 Identity Conversion for Interval
+}
+\examples{
+as.interval(inter_city)
 }

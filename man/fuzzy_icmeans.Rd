@@ -2,7 +2,8 @@
 % Please edit documentation in R/fuzzy_icmeans.R
 \name{fuzzy_icmeans}
 \alias{fuzzy_icmeans}
-\title{Interval Fuzzy C-Means Clustering}
+\title{Performs fuzzy c-means clustering on interval data, allowing for soft
+clustering of data points into multiple clusters.}
 \usage{
 fuzzy_icmeans(
   x,
@@ -15,26 +16,44 @@ fuzzy_icmeans(
 )
 }
 \arguments{
-\item{x}{A 3D interval array.}
+\item{x}{A 3D interval array representing the data to be clustered.}
 
-\item{centers}{Either the number of clusters or pre-initialized centers.}
+\item{centers}{Either the number of clusters or a set of pre-initialized
+cluster centers. If a number is provided, it specifies how many clusters to
+create.}
 
-\item{m}{A number greater than 1 giving the degree of fuzzification.}
+\item{m}{A number greater than 1 that controls the degree of fuzziness in the
+clustering process (default is 2).}
 
-\item{nstart}{Number of executions to find the best result.}
+\item{nstart}{Number of times to run the clustering algorithm with different
+starting values to find the best solution (default is 2).}
 
-\item{distance}{A string specifying the distance ('euclid', 'hausdorff').}
+\item{distance}{A string specifying the distance metric to use, either
+'euclid' for Euclidean distance or 'hausdorff' for Hausdorff distance
+(default is 'euclid').}
 
-\item{trace}{Logical, if TRUE, tracing information on the progress of the
-algorithm is produced.}
+\item{trace}{Logical, if `TRUE`, tracing information on the progress of the
+algorithm is displayed (default is `FALSE`).}
 
-\item{iter.max}{Maximum number of iterations allowed.}
+\item{iter.max}{Maximum number of iterations allowed for the clustering
+algorithm (default is 40).}
 }
 \value{
-A list representing the clustering results.
+A list of clustering results, including:
+  - `cluster`: The membership matrix indicating the degree of belonging of
+               each data point to each cluster.
+  - `centers`: The final cluster centers.
+  - `totss`: Total sum of squares.
+  - `withinss`: Within-cluster sum of squares by cluster.
+  - `tot.withinss`: Total within-cluster sum of squares.
+  - `betweenss`: Between-cluster sum of squares.
+  - `size`: Sizes of each cluster.
+  - `iter`: Number of iterations run by the algorithm.
+  - `overlaps`: The average overlap among clusters.
 }
 \description{
-Cluster interval data using the fuzzy c-means algorithm.
+Performs fuzzy c-means clustering on interval data, allowing for soft
+clustering of data points into multiple clusters.
 }
 \examples{
 fuzzy_icmeans(iaggregate(iris, col = 5), 2)

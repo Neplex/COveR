@@ -2,28 +2,43 @@
 % Please edit documentation in R/r2okm.R
 \name{r2okm}
 \alias{r2okm}
-\title{R2-OKM Clustering}
+\title{Cluster data using the R2-OKM algorithm.}
 \usage{
 r2okm(x, centers, lambda = 0, nstart = 10, trace = FALSE, iter.max = 20)
 }
 \arguments{
-\item{x}{A data matrix.}
+\item{x}{A numeric data matrix or data frame containing the data to be
+clustered.}
 
-\item{centers}{The number of clusters or a matrix of initial centers.}
+\item{centers}{Either a positive integer specifying the number of clusters
+to create or a matrix of initial cluster centers.}
 
-\item{lambda}{A numeric parameter controlling clustering behavior.}
+\item{lambda}{A numeric parameter that controls the clustering behavior,
+influencing the shape and separation of clusters (default is 0).}
 
-\item{nstart}{Number of executions to find the best result.}
+\item{nstart}{Number of random initializations to find the best clustering
+result (default is 10).}
 
-\item{trace}{Logical, if TRUE, provides progress information.}
+\item{trace}{Logical value indicating whether to display progress information
+during execution (default is `FALSE`).}
 
-\item{iter.max}{Maximum number of iterations allowed.}
+\item{iter.max}{Maximum number of iterations allowed for the clustering
+algorithm (default is 20).}
 }
 \value{
-A list representing the clustering results.
+A list containing the clustering results, which includes:
+  - `cluster`: Matrix indicating the cluster assignments for each data point.
+  - `centers`: The final cluster centers.
+  - `totss`: Total sum of squares.
+  - `withinss`: Within-cluster sum of squares for each cluster.
+  - `tot.withinss`: Total within-cluster sum of squares.
+  - `betweenss`: Between-cluster sum of squares.
+  - `size`: Number of data points in each cluster.
+  - `iter`: Number of iterations performed.
+  - `overlaps`: Average number of clusters that each point overlaps with.
 }
 \description{
-Cluster data using the R2OKM algorithm.
+Cluster data using the R2-OKM algorithm.
 }
 \examples{
 r2okm(iris[, -5], 3)

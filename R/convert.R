@@ -5,11 +5,12 @@
 
 # Interval to R object =========================================================
 
-#' Convert Interval to Vector
+#' Converts an interval object to its vector representation.
 #'
-#' @param x An interval object.
-#' @param ... Additional arguments to be passed to or from methods.
-#' @return A vector representation of the interval.
+#' @param x An interval object to be converted.
+#' @param ... Additional arguments to be passed to as.vector().
+#' @return A numeric vector where each consecutive pair of values represents
+#' an interval.
 #' @export
 #' @examples
 #' as.vector(inter_city)
@@ -17,11 +18,14 @@ as.vector.interval <- function(x, ...) {
   as.vector(x$inter, ...)
 }
 
-#' Convert Interval to Matrix
+#' Converts an interval object to a matrix representation.
 #'
-#' @param x An interval object.
-#' @param ... Additional arguments to be passed to or from methods.
-#' @return A matrix representation of the interval.
+#' Each interval is expanded into its minimum and maximum bounds.
+#'
+#' @param x An interval object to be converted.
+#' @param ... Additional arguments to be passed to as.vector().
+#' @return A matrix representation of the interval, with two columns for each
+#' interval's minimum and maximum values.
 #' @export
 #' @examples
 #' as.matrix(inter_city)
@@ -29,10 +33,10 @@ as.matrix.interval <- function(x, ...) {
   matrix(as.vector(x$inter, ...), ncol = dim(x$inter)[3] * 2)
 }
 
-#' Convert Interval to Array
+#' Converts an interval object to an array representation.
 #'
-#' @param x An interval object.
-#' @param ... Additional arguments to be passed to or from methods.
+#' @param x An interval object to be converted.
+#' @param ... Additional arguments to be passed to as.array().
 #' @return An array representation of the interval.
 #' @export
 #' @examples
@@ -41,10 +45,10 @@ as.array.interval <- function(x, ...) {
   as.array(x$inter, ...)
 }
 
-#' Convert Interval to Data Frame
+#' Converts an interval object to a data frame representation.
 #'
-#' @param x An interval object.
-#' @param ... Additional arguments to be passed to or from methods.
+#' @param x An interval object to be converted.
+#' @param ... dditional arguments to be passed to as.data.frame().
 #' @return A data frame representation of the interval.
 #' @export
 #' @examples
@@ -55,10 +59,10 @@ as.data.frame.interval <- function(x, ...) {
 
 # R object to interval =========================================================
 
-#' Default Method for Interval Conversion
+#' Provides a default method for converting unsupported data types to interval.
 #'
-#' @param x An object to be converted.
-#' @return `NULL` as default behavior for non-supported types.
+#' @param x An object that does not have a supported conversion method.
+#' @return `NULL`, indicating no conversion is possible.
 #' @export
 as.interval.default <- function(x) {
   NULL
@@ -67,15 +71,21 @@ as.interval.default <- function(x) {
 #' Identity Conversion for Interval
 #'
 #' @param x An interval object.
-#' @return The interval object itself.
+#' @return The input interval object, without modification.
 #' @export
+#' @examples
+#' as.interval(inter_city)
 as.interval.interval <- function(x) {
   x
 }
 
-#' Convert Numeric to Interval
+#' Converts a numeric vector to an interval object.
 #'
-#' @param x A numeric vector.
+#' The length of the numeric vector must be even, representing pairs of minimum
+#' and maximum values.
+#'
+#' @param x A numeric vector where each consecutive pair of values represents
+#' an interval.
 #' @return An interval object constructed from the numeric vector.
 #' @export
 #' @examples
@@ -91,9 +101,13 @@ as.interval.numeric <- function(x) {
   structure(list(inter = d, class = vector()), class = "interval")
 }
 
-#' Convert Matrix to Interval
+#' Converts a matrix to an interval object.
 #'
-#' @param x A matrix object.
+#' The number of columns in the matrix must be even, representing pairs of
+#' minimum and maximum values.
+#'
+#' @param x A matrix where each pair of columns represents the minimum and
+#' maximum bounds of intervals.
 #' @return An interval object constructed from the matrix.
 #' @export
 #' @examples
@@ -109,11 +123,18 @@ as.interval.matrix <- function(x) {
   structure(list(inter = d, class = vector()), class = "interval")
 }
 
-#' Convert Array to Interval
+#' Converts an array to an interval object.
 #'
-#' @param x An array object.
-#' @return An interval object constructed from the array or attempts conversion.
+#' The array must have three
+#' dimensions, with the second dimension of size 2, representing the minimum
+#' and maximum values.
+#'
+#' @param x An array to be converted to an interval object.
+#' @return An interval object constructed from the array if it meets the
+#' requirements, otherwise attempts to convert it to a matrix first.
 #' @export
+#' @examples
+#' as.interval(array(1:12, dim = c(2, 2, 3)))
 as.interval.array <- function(x) {
   if (is.array(x) &&
         length(dim(x)) == 3 &&
@@ -124,10 +145,11 @@ as.interval.array <- function(x) {
   }
 }
 
-#' Interval Data Converter
+#' A generic function to convert various R objects into interval objects.
 #'
-#' Generic function to convert different data types to interval.
-#' @param x An R object.
+#' @param x An R object to be converted to an interval.
+#' @return An interval object constructed from the R object or NULL if the type
+#' is not supported.
 #' @export
 as.interval <- function(x) {  # nolint object_name_linter
   UseMethod("as.interval")

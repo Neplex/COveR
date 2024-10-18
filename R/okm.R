@@ -14,19 +14,27 @@
 # this program; if not, write to the author. guillaume.cleuziou@univ-orleans.fr
 
 
-#' OKM Clustering
+#' Clusters data using the OKM (Overlapping K-Means) clustering algorithm.
 #'
-#' Overlapping K-Means clustering algorithm.
+#' @param x A numeric data matrix or data frame containing the data to be
+#' clustered.
+#' @param centers Either a positive integer indicating the number of clusters to
+#' create or a matrix of pre-initialized cluster centers.
+#' @param iter.max Maximum number of iterations allowed for the clustering
+#' algorithm (default is 10).
+#' @param nstart Number of random initializations to find the best result
+#' (default is 1).
+#' @param trace Logical value indicating whether to display the progress of the
+#' algorithm (default is `FALSE`).
+#' @param method A string specifying the distance metric to use; options are
+#' 'euclid' (Euclidean distance) or 'manhattan' (Manhattan distance)
+#' (default is "euclid").
+#' @return A list containing the clustering results, including:
+#'   - `cluster`: Matrix indicating the cluster assignments for each data point.
+#'   - `centers`: The final cluster centers.
+#'   - `tot.withinss`: Total within-cluster sum of squares.
+#'   - `overlaps`: The measure of overlap among clusters.
 #' @useDynLib COveR, .registration = TRUE
-#' @param x A data matrix.
-#' @param centers A number or matrix representing the number of clusters or
-#' pre-initialized centers.
-#' @param iter.max Maximum number of iterations allowed.
-#' @param nstart Number of executions to find the best result.
-#' @param trace Logical, if TRUE, trace progress of the algorithm.
-#' @param method A string specifying the distance method ('euclid' or
-#' 'manhattan').
-#' @return A list representing the clustering results.
 #' @export
 #' @examples
 #' okm(iris[, -5], 3)
@@ -129,11 +137,11 @@ okm <- function(  # nolint cyclocomp_linter
   ), class = "okm")
 }
 
-#' Print Method for OKM Clustering
+#' Displays the results of OKM clustering in a readable format.
 #'
-#' Print method for displaying results of OKM clustering.
-#' @param x An OKM object.
-#' @param ... Additional arguments passed to the print method.
+#' @param x An OKM object resulting from the `okm` function.
+#' @param ... Additional arguments passed to print().
+#' @return No return value, it prints the clustering results to the console.
 #' @export
 print.okm <- function(x, ...) {
   cat("OKM clustering with", length(x$size), "clusters of sizes:",

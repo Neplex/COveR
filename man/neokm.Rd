@@ -2,7 +2,7 @@
 % Please edit documentation in R/neokm.R
 \name{neokm}
 \alias{neokm}
-\title{NEOKM Clustering}
+\title{Clusters data using the NEOKM (Non-Exhaustive Overlapping K-means) algorithm.}
 \usage{
 neokm(
   x,
@@ -15,25 +15,41 @@ neokm(
 )
 }
 \arguments{
-\item{x}{A data matrix.}
+\item{x}{A numeric matrix or data frame containing the data to be clustered.}
 
-\item{centers}{The number of clusters or pre-initialized centers.}
+\item{centers}{Either the number of clusters to create or a set of
+pre-initialized cluster centers.
+If a number is provided, it indicates how many clusters to create.}
 
-\item{alpha}{A number representing overlap.}
+\item{alpha}{A numeric value representing the degree of overlap allowed
+between clusters (default is 0.3).}
 
-\item{beta}{A number representing non-exhaustiveness.}
+\item{beta}{A numeric value representing non-exhaustiveness, which affects
+the cluster formation (default is 0.05).}
 
-\item{nstart}{Number of executions to find the best result.}
+\item{nstart}{The number of times to run the NEOKM algorithm with different
+starting values to find the best result (default is 10).}
 
-\item{trace}{Logical, if TRUE, trace progress of the algorithm.}
+\item{trace}{Logical value indicating whether to show progress of the
+algorithm (default is `FALSE`).}
 
-\item{iter.max}{Maximum number of iterations allowed.}
+\item{iter.max}{Maximum number of iterations allowed for the NEOKM algorithm
+(default is 20).}
 }
 \value{
-A list representing the clustering results.
+A list of clustering results, including:
+  - `cluster`: Matrix indicating the cluster assignment for each data point.
+  - `centers`: The final cluster centers.
+  - `totss`: Total sum of squares.
+  - `withinss`: Within-cluster sum of squares by elements.
+  - `tot.withinss`: Total within-cluster sum of squares.
+  - `betweenss`: Between-cluster sum of squares.
+  - `size`: The number of points in each cluster.
+  - `iter`: The number of iterations the algorithm executed.
+  - `overlaps`: The average overlap across clusters.
 }
 \description{
-Cluster data using the NEOKM algorithm.
+Clusters data using the NEOKM (Non-Exhaustive Overlapping K-means) algorithm.
 }
 \examples{
 neokm(iris[, -5], 3)

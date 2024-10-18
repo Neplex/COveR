@@ -1,14 +1,28 @@
-#' R1-OKM Clustering
+#' Cluster data using the R1-OKM algorithm.
 #'
-#' Cluster data using the R1OKM algorithm.
+#' @param x A numeric data matrix or data frame containing the data to be
+#' clustered.
+#' @param centers Either a positive integer indicating the number of clusters to
+#' create or a matrix of initial cluster centers.
+#' @param alpha A numeric parameter controlling the clustering behavior,
+#' influencing the degree of overlap between clusters (default is 0).
+#' @param nstart Number of random initializations to find the best clustering
+#' result (default is 10).
+#' @param trace Logical value indicating whether to display progress information
+#' during execution (default is `FALSE`).
+#' @param iter.max Maximum number of iterations allowed for the clustering
+#' algorithm (default is 20).
+#' @return A list containing the clustering results, including:
+#'   - `cluster`: Matrix indicating the cluster assignments for each data point.
+#'   - `centers`: The final cluster centers.
+#'   - `totss`: Total sum of squares.
+#'   - `withinss`: Within-cluster sum of squares for each cluster.
+#'   - `tot.withinss`: Total within-cluster sum of squares.
+#'   - `betweenss`: Between-cluster sum of squares.
+#'   - `size`: Number of data points in each cluster.
+#'   - `iter`: Number of iterations performed.
+#'   - `overlaps`: Average number of clusters that each point overlaps with.
 #' @useDynLib COveR, .registration = TRUE
-#' @param x A data matrix.
-#' @param centers The number of clusters or a matrix of initial centers.
-#' @param alpha A numeric parameter controlling clustering behavior.
-#' @param nstart Number of executions to find the best result.
-#' @param trace Logical, if TRUE, provides progress information.
-#' @param iter.max Maximum number of iterations allowed.
-#' @return A list representing the clustering results.
 #' @export
 #' @examples
 #' r1okm(iris[, -5], 3)
@@ -88,11 +102,11 @@ r1okm <- function(  # nolint cyclocomp_linter
   ), class = "r1okm")
 }
 
-#' Print Method for R1-OKM Clustering
+#' Displays the results of R1-OKM clustering in a readable format.
 #'
-#' Custom print method for displaying R1OKM clustering results.
-#' @param x An R1OKM object.
-#' @param ... Additional arguments passed to the print method.
+#' @param x An R1-OKM object resulting from the `r1okm` function.
+#' @param ... Additional arguments passed to print().
+#' @return No return value, it prints the clustering results to the console.
 #' @export
 print.r1okm <- function(x, ...) {
   cat("R1OKM clustering with", length(x$size), "clusters of sizes:",

@@ -2,20 +2,20 @@
 % Please edit documentation in R/convert.R
 \name{as.array.interval}
 \alias{as.array.interval}
-\title{Convert Interval to Array}
+\title{Converts an interval object to an array representation.}
 \usage{
 \method{as.array}{interval}(x, ...)
 }
 \arguments{
-\item{x}{An interval object.}
+\item{x}{An interval object to be converted.}
 
-\item{...}{Additional arguments to be passed to or from methods.}
+\item{...}{Additional arguments to be passed to as.array().}
 }
 \value{
 An array representation of the interval.
 }
 \description{
-Convert Interval to Array
+Converts an interval object to an array representation.
 }
 \examples{
 as.array(inter_city)

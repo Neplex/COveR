@@ -6,5 +6,6 @@
 ^\.idea$
 ^\.lintr$
 ^\.gitattributes$
+^LICENSE$
 ^CITATION.cff$
 ^codemeta.json$

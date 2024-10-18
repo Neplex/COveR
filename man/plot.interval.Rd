@@ -2,17 +2,20 @@
 % Please edit documentation in R/interval.R
 \name{plot.interval}
 \alias{plot.interval}
-\title{Plot Interval Data}
+\title{Generates a visual representation of interval data as rectangles on a plot.}
 \usage{
 \method{plot}{interval}(x, ...)
 }
 \arguments{
-\item{x}{An interval object.}
+\item{x}{An interval object to be plotted.}
 
-\item{...}{Additional graphical parameters such as 'col' and 'add'.}
+\item{...}{Additional graphical parameters such as `col` and `add`.}
+}
+\value{
+No return value, it plot the interval.
 }
 \description{
-Create a plot representation of interval data.
+Generates a visual representation of interval data as rectangles on a plot.
 }
 \examples{
 plot(iaggregate(iris, 5))

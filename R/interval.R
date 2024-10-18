@@ -1,10 +1,11 @@
-#' Interval Data Test
+#' Determines if an object is a strictly valid interval object.
 #'
-#' Test if an object is a (strict) interval.
-#' @param x An R object.
+#' @param x An R object to be tested.
+#' @return A logical value indicating whether the object is a valid interval.
 #' @export
 #' @examples
 #' is.interval(inter_city)
+#' is.interval(1:4)
 is.interval <- function(x) {  # nolint object_name_linter
   inherits(x, "interval") &&
     is.array(x$inter) &&
@@ -12,11 +13,11 @@ is.interval <- function(x) {  # nolint object_name_linter
     dim(x$inter)[2] == 2
 }
 
-#' Interval Data Print
+#' Custom print method for displaying interval objects in a readable format.
 #'
-#' Custom print method for interval objects.
-#' @param x An interval object.
-#' @param ... Additional arguments passed to print.
+#' @param x An interval object to be printed.
+#' @param ... Additional arguments passed to the underlying print() function.
+#' @return No return value, it prints the interval to the console.
 #' @export
 #' @examples
 #' print(inter_city)
@@ -27,12 +28,12 @@ print.interval <- function(x, ...) {
   invisible(x)
 }
 
-#' Load 3D Interval Array from CSV
+#' Reads a CSV file and converts the data into a 3D interval array.
 #'
-#' Load interval data from a CSV file and convert it into a 3D array.
 #' @param row.names Logical indicating if the first column contains row names.
-#' @param class The column index of class labels (NULL if not present).
-#' @param ... Additional arguments passed to read.csv.
+#' @param class The column index of class labels (set to `NULL` if not present).
+#' @param ... Additional arguments passed to read.csv().
+#' @return A structured interval object representing the data from the CSV file.
 #' @importFrom utils read.csv
 #' @export
 read.interval <- function(  # nolint object_name_linter
@@ -82,12 +83,12 @@ read.interval <- function(  # nolint object_name_linter
   structure(list(inter = data, class = classes), class = "interval")
 }
 
-#' Save 3D Interval Array to CSV
+#' Writes an interval object to a CSV file.
 #'
-#' Save interval data to a CSV file.
-#' @param x An interval object.
-#' @param class Logical indicating whether to write the class column at the end.
-#' @param ... Additional arguments passed to write.csv.
+#' @param x An interval object to be saved.
+#' @param class Logical indicating whether to add the class column in the CSV.
+#' @param ... Additional arguments passed to write.csv().
+#' @return No return value, it saves the interval to the given CSV file.
 #' @importFrom utils write.csv
 #' @export
 write.interval <- function(x, ..., class = FALSE) {  # nolint object_name_linter
@@ -104,11 +105,11 @@ write.interval <- function(x, ..., class = FALSE) {  # nolint object_name_linter
   write.csv(frame, ...)
 }
 
-#' Plot Interval Data
+#' Generates a visual representation of interval data as rectangles on a plot.
 #'
-#' Create a plot representation of interval data.
-#' @param x An interval object.
-#' @param ... Additional graphical parameters such as 'col' and 'add'.
+#' @param x An interval object to be plotted.
+#' @param ... Additional graphical parameters such as `col` and `add`.
+#' @return No return value, it plot the interval.
 #' @importFrom graphics plot rect
 #' @export
 #' @examples
@@ -129,11 +130,11 @@ plot.interval <- function(x, ...) {
   rect(dx[, 1], dy[, 1], dx[, 2], dy[, 2], lwd = 2, border = args$col)
 }
 
-#' Aggregate Data to 3D Interval Array
+#' Aggregates data into a 3D interval array based on a specified column.
 #'
-#' Aggregate data into a 3D interval array.
-#' @param data The data to aggregate.
-#' @param col The column index to aggregate on.
+#' @param data The data frame to aggregate.
+#' @param col The index of the column to aggregate by.
+#' @return A structured interval object representing the aggregated data.
 #' @importFrom stats aggregate
 #' @export
 #' @examples
@@ -159,11 +160,14 @@ iaggregate <- function(data, col = 1) {
   ))
 }
 
-#' Bind Multiple Interval Objects
+#' Combines multiple interval objects into a single interval object.
 #'
-#' Bind multiple interval objects into one.
-#' @param ... Interval objects to bind.
-#' @param class Logical indicating whether to create a new class by binding.
+#' @param ... Interval objects to bind together.
+#' @param class Logical value indicating whether to assign a new class label to
+#' each interval object when binding. If `TRUE`, each set of intervals will have
+#' a distinct class label.
+#' @return A new interval object containing the combined intervals from the
+#' input objects.
 #' @export
 #' @examples
 #' ibind(iaggregate(iris, 5), iaggregate(iris, 5))
@@ -206,11 +210,14 @@ ibind <- function(..., class = FALSE) {
   data
 }
 
-#' Generate Intervals from Normal Distribution
+#' Creates intervals from Normal Distribution using specified mean and standard
+#' deviation values for both the center and half-size of the intervals.
 #'
-#' Generate intervals using specified mean and standard deviation values.
-#' @param n Number of elements to generate.
-#' @param ... Vectors (center mean, center sd, half-size mean,half-size sd).
+#' @param n Number of intervals to generate.
+#' @param ... Vectors representing parameters for generating intervals: each
+#' vector should contain four values (`center mean`, `center sd`,
+#' `half-size mean`, `half-size sd`).
+#' @return An interval object containing the generated intervals.
 #' @importFrom stats rnorm
 #' @export
 #' @examples
@@ -233,15 +240,19 @@ igenerate <- function(n, ...) {
   as.interval(data)
 }
 
-#' Measure Overlap by Threshold
+#' Plots the overlap of membership degrees in a matrix as a function of a
+#' threshold.
 #'
-#' Plot overlap as a function of threshold for membership degrees.
 #' @param x A matrix of membership degrees.
-#' @param min Minimum threshold value.
-#' @param max Maximum threshold value.
-#' @param step Step size for threshold values.
+#' @param min Minimum threshold value for the plot (default is 0).
+#' @param max Maximum threshold value for the plot (default is 1).
+#' @param step Step size for the threshold values (default is 0.1).
+#' @return No return value, it plot the overlap as a function of the threshold.
 #' @importFrom graphics plot
 #' @export
+#' @examples
+#' membership_matrix <- matrix(runif(20), nrow = 5)
+#' measure(membership_matrix, min = 0, max = 1, step = 0.2)
 measure <- function(x, min = 0, max = 1, step = 0.1) {
   stopifnot(is.matrix(x))
 
@@ -250,12 +261,18 @@ measure <- function(x, min = 0, max = 1, step = 0.1) {
   plot(thresholds, overlap, type = "l", xlab = "Threshold", ylab = "Overlap")
 }
 
-#' Convert Degree Matrix to Logical
+#' Transforms a matrix of membership degrees into a logical matrix based on a
+#' specified threshold.
 #'
-#' Transform a degree matrix into a logical matrix based on a threshold.
 #' @param x A matrix of membership degrees.
-#' @param t Threshold value for conversion.
+#' @param t Threshold value for converting the degrees to logical values. By
+#' default, it uses the minimum of the maximum values in each row.
+#' @return A logical matrix where each element is `TRUE` if it meets or exceeds
+#' the threshold, and `FALSE` otherwise.
 #' @export
+#' @examples
+#' degrees <- matrix(runif(9), nrow = 3)
+#' degree2logical(degrees, t = 0.5)
 degree2logical <- function(x, t = min(apply(x, 1, max))) {
   x >= t
 }

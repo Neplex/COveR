@@ -10,7 +10,7 @@ Description: Provide functions for overlaps clustering, fuzzy clustering and int
 	Fuzzy Cmeans from Bezdek, J. C. (1981) <doi:10.1007/978-1-4757-0450-1> ;
 	Fuzzy I-Cmeans from de A.T. De Carvalho, F. (2005) <doi:10.1016/j.patrec.2006.08.014>.
 Depends: R (>= 3.2.3)
-License: file LICENSE
+License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.1

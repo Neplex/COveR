@@ -2,7 +2,8 @@
 % Please edit documentation in R/ikmeans.R
 \name{ikmeans}
 \alias{ikmeans}
-\title{Interval K-Means Clustering}
+\title{Performs k-means clustering on interval data, allowing for partitioning of
+data points into distinct clusters.}
 \usage{
 ikmeans(
   x,
@@ -14,23 +15,39 @@ ikmeans(
 )
 }
 \arguments{
-\item{x}{A 3D interval array.}
+\item{x}{A 3D interval array representing the data to be clustered.}
 
-\item{centers}{Either the number of clusters or pre-initialized centers.}
+\item{centers}{Either the number of clusters to create or a set of
+pre-initialized cluster centers. If a number is provided, it specifies how
+many clusters to create.}
 
-\item{nstart}{Number of executions to find the best result.}
+\item{nstart}{The number of times to run the k-means algorithm with different
+starting values in order to find the best solution (default is 10).}
 
-\item{distance}{Distance metric ('euclid' or 'hausdorff').}
+\item{distance}{A string specifying the distance metric to use: 'euclid' for
+Euclidean distance or 'hausdorff' for Hausdorff distance (default is
+'euclid').}
 
-\item{trace}{Logical, if TRUE, trace progress of the algorithm.}
+\item{trace}{Logical value indicating whether to show progress of the
+algorithm (default is `FALSE`).}
 
-\item{iter.max}{Maximum number of iterations allowed.}
+\item{iter.max}{Maximum number of iterations allowed for the k-means
+algorithm (default is 20).}
 }
 \value{
-A list representing the clustering results.
+A list of clustering results, including:
+  - `cluster`: A vector indicating the cluster assignment of each data point.
+  - `centers`: The final cluster centers.
+  - `totss`: Total sum of squares.
+  - `withinss`: Within-cluster sum of squares by cluster.
+  - `tot.withinss`: Total within-cluster sum of squares.
+  - `betweenss`: Between-cluster sum of squares.
+  - `size`: The number of points in each cluster.
+  - `iter`: Number of iterations the algorithm executed.
 }
 \description{
-Cluster interval data using the k-means algorithm.
+Performs k-means clustering on interval data, allowing for partitioning of
+data points into distinct clusters.
 }
 \examples{
 ikmeans(iaggregate(iris, col = 5), 2)

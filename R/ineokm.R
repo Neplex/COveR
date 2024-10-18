@@ -1,15 +1,30 @@
-#' Interval Neo-KM Clustering
+#' Performs clustering on interval data using the Neo-KM algorithm, which allows
+#' for overlapping and non-exhaustive cluster membership.
 #'
-#' Cluster interval data using the Neo-KM algorithm.
+#' @param x A 3D interval array representing the data to be clustered.
+#' @param centers Either the number of clusters to create or a set of
+#' pre-initialized cluster centers. If a number is provided, it specifies how
+#' many clusters to create.
+#' @param alpha A numeric value that controls the degree of overlap between
+#' clusters (default is 0.3).
+#' @param beta A numeric value that controls the non-exhaustiveness of clusters
+#' (default is 0.05).
+#' @param nstart The number of times to run the Neo-KM algorithm with different
+#' starting values in order to find the best solution (default is 10).
+#' @param trace Logical value indicating whether to show the progress of the
+#' algorithm (default is `FALSE`).
+#' @param iter.max Maximum number of iterations allowed for the Neo-KM algorithm
+#' (default is 20).
+#' @return A list of clustering results, including:
+#'   - `cluster`: A vector indicating the cluster assignment of each data point.
+#'   - `centers`: The final cluster centers.
+#'   - `totss`: Total sum of squares.
+#'   - `withinss`: Within-cluster sum of squares by cluster.
+#'   - `tot.withinss`: Total within-cluster sum of squares.
+#'   - `betweenss`: Between-cluster sum of squares.
+#'   - `size`: The number of points in each cluster.
+#'   - `iter`: Number of iterations the algorithm executed.
 #' @useDynLib COveR, .registration = TRUE
-#' @param x A 3D interval array.
-#' @param centers Either the number of clusters or pre-initialized centers.
-#' @param alpha A numeric value representing overlap.
-#' @param beta A numeric value representing non-exhaustiveness.
-#' @param nstart Number of executions to find the best result.
-#' @param trace Logical, if TRUE, trace progress of the algorithm.
-#' @param iter.max Maximum number of iterations allowed.
-#' @return A list representing the clustering results.
 #' @export
 #' @examples
 #' ineokm(iaggregate(iris, col = 5), 3)
@@ -95,11 +110,11 @@ ineokm <- function(  # nolint cyclocomp_linter
   ), class = "ineokm")
 }
 
-#' Print Method for Ineokm Clustering
+#' Displays the results of Neo-KM clustering in a user-friendly format.
 #'
-#' Print method for displaying results of ineokm clustering.
-#' @param x An ineokm object.
-#' @param ... Additional arguments passed to the print method.
+#' @param x An `ineokm` object resulting from the `ineokm` function.
+#' @param ... Additional arguments passed to print().
+#' @return No return value, it prints the clustering results to the console.
 #' @export
 print.ineokm <- function(x, ...) {
   cat("Ineokm clustering with", length(x$size), "clusters of sizes:",

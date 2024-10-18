@@ -1,14 +1,29 @@
-#' Interval K-Means Clustering
+#' Performs k-means clustering on interval data, allowing for partitioning of
+#' data points into distinct clusters.
 #'
-#' Cluster interval data using the k-means algorithm.
+#' @param x A 3D interval array representing the data to be clustered.
+#' @param centers Either the number of clusters to create or a set of
+#' pre-initialized cluster centers. If a number is provided, it specifies how
+#' many clusters to create.
+#' @param nstart The number of times to run the k-means algorithm with different
+#' starting values in order to find the best solution (default is 10).
+#' @param distance A string specifying the distance metric to use: 'euclid' for
+#' Euclidean distance or 'hausdorff' for Hausdorff distance (default is
+#' 'euclid').
+#' @param trace Logical value indicating whether to show progress of the
+#' algorithm (default is `FALSE`).
+#' @param iter.max Maximum number of iterations allowed for the k-means
+#' algorithm (default is 20).
+#' @return A list of clustering results, including:
+#'   - `cluster`: A vector indicating the cluster assignment of each data point.
+#'   - `centers`: The final cluster centers.
+#'   - `totss`: Total sum of squares.
+#'   - `withinss`: Within-cluster sum of squares by cluster.
+#'   - `tot.withinss`: Total within-cluster sum of squares.
+#'   - `betweenss`: Between-cluster sum of squares.
+#'   - `size`: The number of points in each cluster.
+#'   - `iter`: Number of iterations the algorithm executed.
 #' @useDynLib COveR, .registration = TRUE
-#' @param x A 3D interval array.
-#' @param centers Either the number of clusters or pre-initialized centers.
-#' @param nstart Number of executions to find the best result.
-#' @param distance Distance metric ('euclid' or 'hausdorff').
-#' @param trace Logical, if TRUE, trace progress of the algorithm.
-#' @param iter.max Maximum number of iterations allowed.
-#' @return A list representing the clustering results.
 #' @export
 #' @examples
 #' ikmeans(iaggregate(iris, col = 5), 2)
@@ -99,11 +114,11 @@ ikmeans <- function(  # nolint cyclocomp_linter
   ), class = "ikmeans")
 }
 
-#' Print Method for Ikmeans Clustering
+#' Displays the results of ikmeans clustering in a readable format.
 #'
-#' Print method for displaying results of ikmeans clustering.
-#' @param x An ikmeans object.
-#' @param ... Additional arguments passed to the print method.
+#' @param x An `ikmeans` object resulting from the `ikmeans` function.
+#' @param ... Additional arguments passed to print().
+#' @return No return value, it prints the clustering results to the console.
 #' @export
 print.ikmeans <- function(x, ...) {
   cat("Ikmeans clustering with", length(x$size), "clusters of sizes:",

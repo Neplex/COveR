@@ -2,15 +2,18 @@
 % Please edit documentation in R/r2okm.R
 \name{print.r2okm}
 \alias{print.r2okm}
-\title{Print Method for R2-OKM Clustering}
+\title{Displays the results of R2-OKM clustering in a readable format.}
 \usage{
 \method{print}{r2okm}(x, ...)
 }
 \arguments{
-\item{x}{An R2OKM object.}
+\item{x}{An R2-OKM object resulting from the `r2okm` function.}
 
-\item{...}{Additional arguments passed to the print method.}
+\item{...}{Additional arguments passed to print().}
+}
+\value{
+No return value, it prints the clustering results to the console.
 }
 \description{
-Custom print method for displaying R2OKM clustering results.
+Displays the results of R2-OKM clustering in a readable format.
 }

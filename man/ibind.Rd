@@ -2,17 +2,23 @@
 % Please edit documentation in R/interval.R
 \name{ibind}
 \alias{ibind}
-\title{Bind Multiple Interval Objects}
+\title{Combines multiple interval objects into a single interval object.}
 \usage{
 ibind(..., class = FALSE)
 }
 \arguments{
-\item{...}{Interval objects to bind.}
+\item{...}{Interval objects to bind together.}
 
-\item{class}{Logical indicating whether to create a new class by binding.}
+\item{class}{Logical value indicating whether to assign a new class label to
+each interval object when binding. If `TRUE`, each set of intervals will have
+a distinct class label.}
+}
+\value{
+A new interval object containing the combined intervals from the
+input objects.
 }
 \description{
-Bind multiple interval objects into one.
+Combines multiple interval objects into a single interval object.
 }
 \examples{
 ibind(iaggregate(iris, 5), iaggregate(iris, 5))

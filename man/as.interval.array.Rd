@@ -2,16 +2,22 @@
 % Please edit documentation in R/convert.R
 \name{as.interval.array}
 \alias{as.interval.array}
-\title{Convert Array to Interval}
+\title{Converts an array to an interval object.}
 \usage{
 \method{as.interval}{array}(x)
 }
 \arguments{
-\item{x}{An array object.}
+\item{x}{An array to be converted to an interval object.}
 }
 \value{
-An interval object constructed from the array or attempts conversion.
+An interval object constructed from the array if it meets the
+requirements, otherwise attempts to convert it to a matrix first.
 }
 \description{
-Convert Array to Interval
+The array must have three
+dimensions, with the second dimension of size 2, representing the minimum
+and maximum values.
+}
+\examples{
+as.interval(array(1:12, dim = c(2, 2, 3)))
 }

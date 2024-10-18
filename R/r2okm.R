@@ -1,14 +1,28 @@
-#' R2-OKM Clustering
+#' Cluster data using the R2-OKM algorithm.
 #'
-#' Cluster data using the R2OKM algorithm.
+#' @param x A numeric data matrix or data frame containing the data to be
+#' clustered.
+#' @param centers Either a positive integer specifying the number of clusters
+#' to create or a matrix of initial cluster centers.
+#' @param lambda A numeric parameter that controls the clustering behavior,
+#' influencing the shape and separation of clusters (default is 0).
+#' @param nstart Number of random initializations to find the best clustering
+#' result (default is 10).
+#' @param trace Logical value indicating whether to display progress information
+#' during execution (default is `FALSE`).
+#' @param iter.max Maximum number of iterations allowed for the clustering
+#' algorithm (default is 20).
+#' @return A list containing the clustering results, which includes:
+#'   - `cluster`: Matrix indicating the cluster assignments for each data point.
+#'   - `centers`: The final cluster centers.
+#'   - `totss`: Total sum of squares.
+#'   - `withinss`: Within-cluster sum of squares for each cluster.
+#'   - `tot.withinss`: Total within-cluster sum of squares.
+#'   - `betweenss`: Between-cluster sum of squares.
+#'   - `size`: Number of data points in each cluster.
+#'   - `iter`: Number of iterations performed.
+#'   - `overlaps`: Average number of clusters that each point overlaps with.
 #' @useDynLib COveR, .registration = TRUE
-#' @param x A data matrix.
-#' @param centers The number of clusters or a matrix of initial centers.
-#' @param lambda A numeric parameter controlling clustering behavior.
-#' @param nstart Number of executions to find the best result.
-#' @param trace Logical, if TRUE, provides progress information.
-#' @param iter.max Maximum number of iterations allowed.
-#' @return A list representing the clustering results.
 #' @export
 #' @examples
 #' r2okm(iris[, -5], 3)
@@ -88,11 +102,11 @@ r2okm <- function(  # nolint cyclocomp_linter
   ), class = "r2okm")
 }
 
-#' Print Method for R2-OKM Clustering
+#' Displays the results of R2-OKM clustering in a readable format.
 #'
-#' Custom print method for displaying R2OKM clustering results.
-#' @param x An R2OKM object.
-#' @param ... Additional arguments passed to the print method.
+#' @param x An R2-OKM object resulting from the `r2okm` function.
+#' @param ... Additional arguments passed to print().
+#' @return No return value, it prints the clustering results to the console.
 #' @export
 print.r2okm <- function(x, ...) {
   cat("R2OKM clustering with", length(x$size), "clusters of sizes:",

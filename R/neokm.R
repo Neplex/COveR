@@ -1,15 +1,30 @@
-#' NEOKM Clustering
+#' Clusters data using the NEOKM (Non-Exhaustive Overlapping K-means) algorithm.
 #'
-#' Cluster data using the NEOKM algorithm.
+#' @param x A numeric matrix or data frame containing the data to be clustered.
+#' @param centers Either the number of clusters to create or a set of
+#' pre-initialized cluster centers.
+#' If a number is provided, it indicates how many clusters to create.
+#' @param alpha A numeric value representing the degree of overlap allowed
+#' between clusters (default is 0.3).
+#' @param beta A numeric value representing non-exhaustiveness, which affects
+#' the cluster formation (default is 0.05).
+#' @param nstart The number of times to run the NEOKM algorithm with different
+#' starting values to find the best result (default is 10).
+#' @param trace Logical value indicating whether to show progress of the
+#' algorithm (default is `FALSE`).
+#' @param iter.max Maximum number of iterations allowed for the NEOKM algorithm
+#' (default is 20).
+#' @return A list of clustering results, including:
+#'   - `cluster`: Matrix indicating the cluster assignment for each data point.
+#'   - `centers`: The final cluster centers.
+#'   - `totss`: Total sum of squares.
+#'   - `withinss`: Within-cluster sum of squares by elements.
+#'   - `tot.withinss`: Total within-cluster sum of squares.
+#'   - `betweenss`: Between-cluster sum of squares.
+#'   - `size`: The number of points in each cluster.
+#'   - `iter`: The number of iterations the algorithm executed.
+#'   - `overlaps`: The average overlap across clusters.
 #' @useDynLib COveR, .registration = TRUE
-#' @param x A data matrix.
-#' @param centers The number of clusters or pre-initialized centers.
-#' @param alpha A number representing overlap.
-#' @param beta A number representing non-exhaustiveness.
-#' @param nstart Number of executions to find the best result.
-#' @param trace Logical, if TRUE, trace progress of the algorithm.
-#' @param iter.max Maximum number of iterations allowed.
-#' @return A list representing the clustering results.
 #' @export
 #' @examples
 #' neokm(iris[, -5], 3)
@@ -86,11 +101,11 @@ neokm <- function(  # nolint cyclocomp_linter
   ), class = "neokm")
 }
 
-#' Print Method for NEOKM Clustering
+#' Displays the results of NEOKM clustering in a user-friendly format.
 #'
-#' Print method for displaying results of NEOKM clustering.
-#' @param x A NEOKM object.
-#' @param ... Additional arguments passed to the print method.
+#' @param x A `neokm` object resulting from the `neokm` function.
+#' @param ... Additional arguments passed to print().
+#' @return No return value, it prints the clustering results to the console.
 #' @export
 print.neokm <- function(x, ...) {
   cat("NEOKM clustering with", length(x$size), "clusters of sizes:",

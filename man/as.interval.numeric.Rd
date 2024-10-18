@@ -2,18 +2,20 @@
 % Please edit documentation in R/convert.R
 \name{as.interval.numeric}
 \alias{as.interval.numeric}
-\title{Convert Numeric to Interval}
+\title{Converts a numeric vector to an interval object.}
 \usage{
 \method{as.interval}{numeric}(x)
 }
 \arguments{
-\item{x}{A numeric vector.}
+\item{x}{A numeric vector where each consecutive pair of values represents
+an interval.}
 }
 \value{
 An interval object constructed from the numeric vector.
 }
 \description{
-Convert Numeric to Interval
+The length of the numeric vector must be even, representing pairs of minimum
+and maximum values.
 }
 \examples{
 as.interval(1:6)

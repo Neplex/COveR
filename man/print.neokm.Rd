@@ -2,15 +2,18 @@
 % Please edit documentation in R/neokm.R
 \name{print.neokm}
 \alias{print.neokm}
-\title{Print Method for NEOKM Clustering}
+\title{Displays the results of NEOKM clustering in a user-friendly format.}
 \usage{
 \method{print}{neokm}(x, ...)
 }
 \arguments{
-\item{x}{A NEOKM object.}
+\item{x}{A `neokm` object resulting from the `neokm` function.}
 
-\item{...}{Additional arguments passed to the print method.}
+\item{...}{Additional arguments passed to print().}
+}
+\value{
+No return value, it prints the clustering results to the console.
 }
 \description{
-Print method for displaying results of NEOKM clustering.
+Displays the results of NEOKM clustering in a user-friendly format.
 }
