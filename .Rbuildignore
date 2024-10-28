@@ -2,10 +2,16 @@
 ^\.Rproj\.user$
 ^Makefile$
 
+^src/.*\.o$
+
 ^\.github$
 ^\.idea$
 ^\.lintr$
 ^\.gitattributes$
+^\.clang-format$
+^\.clang-tidy$
+^compile_commands.json$
+^valgrind.log$
 ^LICENSE$
 ^CITATION.cff$
 ^codemeta.json$

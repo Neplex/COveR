@@ -13,14 +13,12 @@ if test "${GSL_CONFIG}" != ""; then
     GSL_CFLAGS=`${GSL_CONFIG} --cflags`
     GSL_LIBS=`${GSL_CONFIG} --libs`
 else
-    AC_MSG_ERROR([gsl-config not found, is GSL installed?])
+    AC_MSG_WARN([gsl-config not found, is GSL installed?])
+    GSL_CFLAGS=""
+    GSL_LIBS=""
 fi
 
 # Now substitute these variables in src/Makevars.in to create src/Makevars
-# TODO: GSL on CRAN
-GSL_CFLAGS=""
-GSL_LIBS=""
-
 AC_SUBST(GSL_CFLAGS)
 AC_SUBST(GSL_LIBS)
 

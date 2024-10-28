@@ -4,6 +4,43 @@ GSL_CFLAGS = @GSL_CFLAGS@
 GSL_LIBS   = @GSL_LIBS@
 
 # combine with standard arguments for R
-PKG_CPPFLAGS = $(GSL_CFLAGS) -I.
-PKG_LIBS = $(GSL_LIBS) 
+PKG_CFLAGS = $(GSL_CFLAGS) -I.
+PKG_LIBS = $(GSL_LIBS)
 
+SRC_DIR = $(CURDIR)
+OBJECTS = $(SRC_DIR)/icmeans/R_icmeans.o \
+          $(SRC_DIR)/icmeans/dists/ic_hausdorff.o \
+          $(SRC_DIR)/icmeans/dists/ic_euclid.o \
+          $(SRC_DIR)/icmeans/icmeans.o \
+          $(SRC_DIR)/r2okm/r2okm.o \
+          $(SRC_DIR)/r2okm/R_r2okm.o \
+          $(SRC_DIR)/neokm/neokm.o \
+          $(SRC_DIR)/neokm/R_neokm.o \
+          $(SRC_DIR)/r1okm/r1okm.o \
+          $(SRC_DIR)/r1okm/R_r1okm.o \
+          $(SRC_DIR)/iokm/dists/hausdorff/io_hausdorff_mean.o \
+          $(SRC_DIR)/iokm/dists/hausdorff/io_hausdorff_join.o \
+          $(SRC_DIR)/iokm/dists/hausdorff/io_hausdorff_meet.o \
+          $(SRC_DIR)/iokm/dists/hausdorff/io_hausdorff_sum.o \
+          $(SRC_DIR)/iokm/dists/io_hausdorff.o \
+          $(SRC_DIR)/iokm/dists/io_euclid.o \
+          $(SRC_DIR)/iokm/dists/euclid/io_euclid_mean.o \
+          $(SRC_DIR)/iokm/dists/euclid/io_euclid_sum.o \
+          $(SRC_DIR)/iokm/dists/euclid/io_euclid_join.o \
+          $(SRC_DIR)/iokm/dists/euclid/io_euclid_meet.o \
+          $(SRC_DIR)/iokm/iokm.o \
+          $(SRC_DIR)/iokm/R_iokm.o \
+          $(SRC_DIR)/helpers.o \
+          $(SRC_DIR)/COveR-init.o \
+          $(SRC_DIR)/interval.o \
+          $(SRC_DIR)/ikmeans/dists/ik_euclid.o \
+          $(SRC_DIR)/ikmeans/dists/ik_hausdorff.o \
+          $(SRC_DIR)/ikmeans/ikmeans.o \
+          $(SRC_DIR)/ikmeans/R_ikmeans.o \
+          $(SRC_DIR)/ineokm/ineokm.o \
+          $(SRC_DIR)/ineokm/R_ineokm.o \
+          $(SRC_DIR)/okm/okm.o \
+          $(SRC_DIR)/distance.o \
+
+# Link objects
+$(SHLIB): $(OBJECTS)

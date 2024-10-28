@@ -40,6 +40,7 @@
 # Autoconf
 configure
 config.status
+config.log
 Makevars
 
 # Logs & Cache
@@ -48,3 +49,6 @@ Makevars
 
 # Bin
 *.tar.gz
+
+# valgrind output
+valgrind.log

@@ -38,6 +38,14 @@ jobs:
             cont: ~
             rspm: ~
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure project
+        run: |
+          autoconf
+          ./configure
+
       - uses: neurogenomics/rworkflows@master
         with:
           run_bioccheck: ${{ false }}
