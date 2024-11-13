@@ -22,26 +22,52 @@ identifiers:
     value: 'swh:1:dir:4b90d4f4241cb7ebded8819ba0c81389bed5b245'
 repository-code: 'https://github.com/Neplex/COveR'
 abstract: >-
-  Provide functions for overlaps clustering, fuzzy
-  clustering and interval-valued data manipulation. The
-  package implement the following algorithms:
-
-  - OKM (Overlapping Kmeans) from Cleuziou, G. (2007)
-  <doi:10.1109/icpr.2008.4761079> ;
-
-  - NEOKM (Non-exhaustive overlapping Kmeans) from Whang, J.
-  J., Dhillon, I. S., and Gleich, D. F. (2015)
-  <doi:10.1137/1.9781611974010.105> ;
-
-  - Fuzzy Cmeans from Bezdek, J. C. (1981)
-  <doi:10.1007/978-1-4757-0450-1> ;
-
-  - Fuzzy I-Cmeans from de A.T. De Carvalho, F. (2005)
-  <doi:10.1016/j.patrec.2006.08.014>.
+  Provide functions for overlaps clustering, fuzzy clustering and interval-valued data manipulation.
+  The package implement the following algorithms:
+  - OKM (Overlapping Kmeans) from Cleuziou, G. (2007) <doi:10.1109/icpr.2008.4761079> ;
+  - NEOKM (Non-exhaustive overlapping Kmeans) from Whang, J. J., Dhillon, I. S., and Gleich, D. F. (2015) <doi:10.1137/1.9781611974010.105> ;
+  - Fuzzy Cmeans from Bezdek, J. C. (1981) <doi:10.1007/978-1-4757-0450-1> ;
+  - Fuzzy I-Cmeans from de A.T. De Carvalho, F. (2005) <doi:10.1016/j.patrec.2006.08.014>.
 keywords:
   - clustering
   - overlapping
   - interval
 license: GPL-2.0-or-later
-version: 1.0.4
-date-released: '2024-10-16'
+version: 1.1.0
+date-released: '2024-11-13'
+references:
+  - title: "An extended version of the k-means method for overlapping clustering"
+    date-published: "2007"
+    type: article
+    doi: 10.1109/ICPR.2008.4761079
+    authors:
+          - family-names: "Cleuziou"
+            given-names: "Guillaume"
+
+  - title: "Non-exhaustive, Overlapping k-means"
+    date-published: "2015"
+    type: article
+    doi: 10.1137/1.9781611974010.105
+    authors:
+          - family-names: "Whang"
+            given-names: "Joyce Jiyoung"
+          - family-names: "Dhillon"
+            given-names: "Inderjit S."
+          - family-names: "Gleich"
+            given-names: "David F."
+
+  - title: "Pattern Recognition with Fuzzy Objective Function Algorithms"
+    date-published: "1981"
+    type: book
+    doi: 10.1007/978-1-4757-0450-1
+    authors:
+          - family-names: "Bezdek"
+            given-names: "James C."
+
+  - title: "Fuzzy c-means clustering methods for symbolic interval data"
+    date-published: "2005"
+    type: article
+    doi: 10.1016/j.patrec.2006.08.014
+    authors:
+          - family-names: "de Carvalho"
+            given-names: "Francisco de A.T."
