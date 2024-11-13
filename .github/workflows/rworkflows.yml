@@ -13,53 +13,249 @@ name: rworkflows
       - devel
       - RELEASE_**
 jobs:
+  # From neurogenomics/rworkflows
   rworkflows:
     permissions: write-all
     runs-on: ${{ matrix.config.os }}
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
-    container: ${{ matrix.config.cont }}
+    name: ${{ matrix.config.os }}
     strategy:
-      fail-fast: ${{ false }}
+      fail-fast: false
       matrix:
         config:
           - os: ubuntu-latest
-            bioc: devel
-            r: auto
-            cont: ghcr.io/bioconductor/bioconductor_docker:devel
-            rspm: ~
           - os: macOS-latest
-            bioc: release
-            r: auto
-            cont: ~
-            rspm: ~
           - os: windows-latest
-            bioc: release
-            r: auto
-            cont: ~
-            rspm: ~
     steps:
-      - name: Checkout repository
+      - name: 🔭 Collect Workflow Telemetry
+        uses: runforesight/workflow-telemetry-action@v1
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          comment_on_pr: false
+
+      - name: 🌎 Set environment variables
+        run: |
+          echo "RGL_USE_NULL=TRUE" >> $GITHUB_ENV
+          echo "R_REMOTES_NO_ERRORS_FROM_WARNINGS=${{ true }}" >> $GITHUB_ENV
+          echo "TZ=UTC" >> $GITHUB_ENV
+        shell: bash {0}
+
+      ## Set the R library to the directory matching the
+      ## R packages cache step further below when running on Docker (Linux).
+      - name: 📚 Set R library home on Linux
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p /tmp/R/Library
+          echo ".libPaths('/tmp/R/Library')" >> ~/.Rprofile
+          git config --global --add safe.directory '*'
+        shell: bash {0}
+
+      ## Most of these steps are the same as the ones in
+      ## https://github.com/r-lib/actions/blob/master/examples/check-standard.yaml
+      ## If they update their steps, we will also need to update ours.
+      - name: ⏬ Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configure project
+      - name: 🛠 Setup R
+        uses: r-lib/actions/setup-r@v2
+
+      - name: 🛠 Install Pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: ❔ Query dependencies
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          options(crayon.enabled = TRUE)
+          install.packages('remotes')
+          remotes::install_github("r-lib/remotes")
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+        shell: Rscript {0}
+
+      - name: 🏦 Restore R package cache
+        if: |
+          !contains(github.event.head_commit.message, '[nocache]') && runner.os != 'Linux'
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-biocversion-${{ matrix.config.bioc }}-r-${{ matrix.config.r }}-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-biocversion-${{ matrix.config.bioc }}-r-${{  matrix.config.r }}-
+
+      - name: 🏦 Cache R packages on Linux
+        if: |
+          !contains(github.event.head_commit.message, '[nocache]') && runner.os == 'Linux'
+        uses: actions/cache@v3
+        with:
+          path: /tmp/R/Library
+          key: ${{ runner.os }}-biocversion-${{ matrix.config.bioc }}-r-${{  matrix.config.r }}-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-biocversion-${{ matrix.config.bioc }}-r-${{  matrix.config.r }}-
+
+      - name: 🛠 Install Linux system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sysreqs=$(Rscript -e 'cat("apt-get update -y && apt-get install -y", paste(gsub("apt-get install -y ", "", remotes::system_requirements("ubuntu", "20.04")), collapse = " "))')
+          echo $sysreqs
+          sudo -s eval "$sysreqs"
+          sudo apt-get install -y qpdf rsync devscripts autoconf libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev
+        shell: bash {0}
+
+      - name: 🛠 Install macOS system dependencies
+        if: runner.os == 'macOS'
+        run: |
+          #### --- Justifications for each package --- ####
+          ### libxml2 ###
+          # Enable installing XML from source if needed
+          ### imagemagick@6 ###
+          # Required to install magick as noted at
+          # https://github.com/r-lib/usethis/commit/f1f1e0d10c1ebc75fd4c18fa7e2de4551fd9978f#diff-9bfee71065492f63457918efcd912cf2
+          ### harfbuzz fribidi ###
+          # For textshaping, required by ragg, and required by pkgdown
+          ### libgit2 ###
+          # For installing usethis's dependency gert
+          ### xquartz --cask ###
+          # Required for tcltk
+          ### libxfont ###
+          # Required for some ggplot2 functions
+          ### texlive ###
+          # Required for rendering Sweave files (even with r-lib/actions/setup-tinytex)
+
+          #### --- Install packages --- ####
+          ### Install normally ###
+          brew install libxml2 imagemagick@6 harfbuzz fribidi libgit2 texlive autoconf
+          ### Install via cask ###
+          brew install xquartz --cask
+          ### Set up xml2 ###
+          echo "XML_CONFIG=/usr/local/opt/libxml2/bin/xml2-config" >> $GITHUB_ENV
+        shell: bash {0}
+
+      - name: 🛠 Configure
+        if: runner.os == 'Linux' || runner.os == 'macOS'
         run: |
           autoconf
           ./configure
 
-      - uses: neurogenomics/rworkflows@master
-        with:
-          run_bioccheck: ${{ false }}
-          run_rcmdcheck: ${{ true }}
-          as_cran: ${{ true }}
-          run_vignettes: ${{ true }}
-          has_testthat: ${{ true }}
-          run_covr: ${{ true }}
-          run_pkgdown: ${{ true }}
-          has_runit: ${{ false }}
-          has_latex: ${{ false }}
+      - name: 🛠 Install dependencies pass 1
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          run_docker: ${{ false }}
-          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-          runner_os: ${{ runner.os }}
-          cache_version: cache-v1
-          docker_registry: ghcr.io
+        run: |
+          options(crayon.enabled = TRUE, timeout=Sys.getenv("timeout"))
+          ## For running the checks
+          message(paste('****', Sys.time(), 'installing rcmdcheck ****'))
+          install.packages(c("rmarkdown","BiocManager"), dependencies = TRUE)
+          message(paste('****', Sys.time(), 'pass number 1 at installing dependencies****'))
+          repos <- BiocManager::repositories()
+          remotes::install_local(repos=repos, dependencies=TRUE, build_vignettes=FALSE, upgrade=TRUE, force=FALSE)
+        continue-on-error: true
+        shell: Rscript {0}
+
+      - name: 🛠 Install dependencies pass 2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          options(crayon.enabled = TRUE, timeout=Sys.getenv("timeout"))
+          message(paste('****', Sys.time(), 'pass number 2 at installing dependencies****'))
+          repos <- BiocManager::repositories()
+          remotes::install_local(repos=repos, dependencies=TRUE, build_vignettes=FALSE, upgrade=TRUE, force=FALSE)
+        shell: Rscript {0}
+
+      - name: 🛠 Install covr
+        if: runner.os == 'Linux'
+        run: |
+          options(crayon.enabled = TRUE)
+          install.packages("covr")
+        shell: Rscript {0}
+
+      - name: 🛠 Install pkgdown
+        if: runner.os == 'Linux'
+        run: |
+          options(crayon.enabled = TRUE)
+          install.packages("pkgdown")
+        shell: Rscript {0}
+
+      - name: ℹ️ Session info ️
+        run: |
+          options(width = 100, crayon.enabled = TRUE)
+          pkgs <- installed.packages()[,"Package"]
+          if(!require("sessioninfo", quietly=TRUE)) install.packages("sessioninfo")
+          tryCatch({
+            sessioninfo::session_info(pkgs, include_base = TRUE)
+          }, error = function(x){utils::sessionInfo()})
+        shell: Rscript {0}
+
+      - name: ✅ Run CMD check
+        env:
+          _R_CHECK_CRAN_INCOMING_: false
+          RGL_USE_NULL: ${{ env.RGL_USE_NULL }}
+          DISPLAY: 99.0
+          AS_CRAN: true
+          run_vignettes: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          options(crayon.enabled = TRUE)
+          if(!require("rcmdcheck", quietly=TRUE)) install.packages("rcmdcheck")
+          as_cran <- if(Sys.getenv("AS_CRAN")=='true') "--as-cran" else NULL
+          run_build_vignettes <- if(Sys.getenv("run_vignettes")=='true') NULL else "--no-build-vignettes"
+          run_vignettes <- if(Sys.getenv("run_vignettes")=='true') NULL else "--ignore-vignettes"
+          rcmdcheck::rcmdcheck(
+              args = c("--no-manual", "--timings", as_cran, run_vignettes),
+              build_args = c("--no-manual", "--keep-empty-dirs", "--no-resave-data", run_build_vignettes),
+              error_on = "warning",
+              check_dir = "check")
+        shell: Rscript {0}
+
+      - name: 📋 Reveal testthat details
+        run: |
+          find . -name testthat.Rout -exec cat '{}' ';'
+        shell: bash {0}
+
+      - name: 📋 Test coverage
+        if: runner.os == 'Linux'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          covr::codecov()
+        shell: Rscript {0}
+
+      - name: 🛠 Install package ️
+        if: runner.os == 'Linux'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: R CMD INSTALL .
+        shell: bash {0}
+
+      - name: 📦 Render README
+        if: runner.os == 'Linux'
+        env:
+          DISPLAY: 99.0
+        run: |
+          if(file.exists("README.Rmd")){
+            options(crayon.enabled = TRUE)
+            if(!require("rmarkdown", quietly=TRUE)) install.packages("rmarkdown");
+            rmarkdown::render("README.Rmd", output_format = rmarkdown::github_document(html_preview = FALSE));
+          }
+        shell: Rscript {0}
+
+      - name: 📦 Build pkgdown site
+        if: runner.os == 'Linux'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          options(crayon.enabled = TRUE)
+          pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+        shell: Rscript {0}
+
+      - name: 📦🚀 Deploy pkgdown site to GitHub pages
+        if: runner.os == 'Linux'
+        uses: JamesIves/github-pages-deploy-action@releases/v4
+        with:
+          clean: false
+          branch: gh-pages
+          folder: docs
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ⏫ Upload check results
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ runner.os }}-biocversion-${{ matrix.config.bioc }}-r-${{  matrix.config.r }}-results
+          path: check
