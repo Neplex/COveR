@@ -20,6 +20,8 @@ authors:
 identifiers:
   - type: swh
     value: 'swh:1:dir:4b90d4f4241cb7ebded8819ba0c81389bed5b245'
+  - type: doi
+    value: '10.32614/CRAN.package.COveR'
 repository-code: 'https://github.com/Neplex/COveR'
 abstract: >-
   Provide functions for overlaps clustering, fuzzy clustering and interval-valued data manipulation.
