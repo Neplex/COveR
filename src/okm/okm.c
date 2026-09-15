@@ -101,7 +101,10 @@ void mean_2(double *res, const double *v1, const double *v2, const int dim, cons
 double man_attribution(const double *x, const double *cen, int *cl, int *ca, const int n,
                        const int p, const int k, int *ai) {
     int j, it;
-    double dist[n * k], res[p], res2[p], dd2;
+    double *dist = calloc(n * k, sizeof(double)),
+           *res = calloc(p, sizeof(double)),
+           *res2 = calloc(p, sizeof(double)),
+           dd2;
     double ret = 0.0;
 
     compute_man_distances(x, dist, cen, ca, cl, n, p, k);
@@ -166,6 +169,7 @@ double man_attribution(const double *x, const double *cen, int *cl, int *ca, con
              printf("%d ", cl[i*k+j]);
          printf("\n");}
      //*/
+    free(dist); free(res); free(res2);
     return ret;
 }
 
@@ -174,7 +178,9 @@ double man_attribution(const double *x, const double *cen, int *cl, int *ca, con
 double euc_attribution(const double *x, const double *cen, int *cl, int *ca, int n, int p, int k) {
     double dd2;
     int it, j;
-    double res[p], res2[p], dist[n * k];
+    double *res = calloc(p, sizeof(double)),
+           *res2 = calloc(p, sizeof(double)),
+           *dist = calloc(n * k, sizeof(double));
     double ret = 0.0, ret2 = 0.0;
 
     compute_sq_distances(x, dist, cen, ca, cl, n, p, k);
@@ -233,6 +239,7 @@ double euc_attribution(const double *x, const double *cen, int *cl, int *ca, int
         } else
             ret += dd1;
     }
+    free(res); free(res2); free(dist);
     return ret;
 }
 
@@ -279,17 +286,22 @@ void man_compute_center(double *cen, const int num, const double *x, const int *
     int i, j, c;
     int u = 0;
     const int count = compute_cluster_cardinal(cl, num, n, k);
-    double bi[count * p], tbi[p * count], yi[count * p], zi[count], zii[count];
+    double *bi = calloc(count * p, sizeof(double)),
+           *tbi = calloc(p * count, sizeof(double)),
+           *yi = calloc(count * p, sizeof(double)),
+           *zi = calloc(count, sizeof(double)),
+           *zii = calloc(count, sizeof(double));
 
+    double *res = calloc(p, sizeof(double));
     for (i = 0; i < n; i++) {
         if (cl[i * k + num]) {
-            double res[p];
             zi[u] = 1 / (double)ai[i];
             man_compute_sum(cen, ai, res, cl, p, k, num, i);
             for (j = 0; j < p; j++) yi[u * p + j] = x[i * p + j] - res[j];
             u++;
         }
     }
+    free(res);
 
     // printf("u = %d count = %d\n", u, count);
 
@@ -339,6 +351,7 @@ void man_compute_center(double *cen, const int num, const double *x, const int *
     for(i = 0; i < p; i++)
         printf("%f ",cen[num*p+i]);
         //*/
+    free(bi); free(tbi); free(yi); free(zi); free(zii);
 }
 
 // start new centers calculation
@@ -360,10 +373,11 @@ void euc_compute_center(double *cen, const int num, const double *x, const int *
                         const double *pi, const int *cl, const int n, const int p, const int k) {
     int j;
     double tmp = 0.0;
-    double res[p], z[p];
+    double *res = calloc(p, sizeof(double)), *z = calloc(p, sizeof(double));
     // select all the xi in the cluster num and
     // compute the mean of all their other clusters
     for (j = 0; j < p; j++) z[j] = 0.0;
+    double *res2 = calloc(p, sizeof(double));
     for (int i = 0; i < n; i++) {
         if (cl[i * k + num]) {
             tmp += pi[i];
@@ -377,14 +391,15 @@ void euc_compute_center(double *cen, const int num, const double *x, const int *
             if (di[i] == 1)
                 for (j = 0; j < p; j++) z[j] += x[i * p + j];
             else {
-                double res2[p];
                 multiply_vn(res2, &x[i * p], di[i], p);
                 for (j = 0; j < p; j++) z[j] += (res2[j] - res[j]) * pi[i];
             }
         }
     }
+    free(res2);
     if (tmp != 0.0)
         for (j = 0; j < p; j++) cen[num * p + j] = z[j] / tmp;
+    free(res); free(z);
 }
 
 // return 1 if the vectors v1 and v2 are identical else 0
@@ -402,7 +417,7 @@ double debug_compute_wss(const double *x, const double *cen, const int *cl, cons
     double ret = 0.0;
     int j;
 
-    double res[p];
+    double *res = calloc(p, sizeof(double));
 
     for (int i = 0; i < n; i++) {
         for (j = 0; j < p; j++) res[j] = 0.0;
@@ -419,6 +434,7 @@ double debug_compute_wss(const double *x, const double *cen, const int *cl, cons
         ret += man_distance(&x[i * p], res, p);
     }
 
+    free(res);
     return ret;
 }
 
@@ -445,7 +461,7 @@ void R_okm(const double *x, double *cen, const int *pmax, const int *pk, const i
     int iterMax = *pmax;
     int k = *pk, p = *pp, n = *pn, nk = n * k, visu = *pvisu;
     int it, save = *psave;
-    int ai[n];
+    int *ai = calloc(n, sizeof(int));
     const int met = *pmet;
     char method = 0;
 
@@ -466,17 +482,18 @@ void R_okm(const double *x, double *cen, const int *pmax, const int *pk, const i
     if (save) swss[0] = wss;
     if (visu) Rprintf("WSS at first turn : %f\n", wss);
     for (int iter = 0; iter < iterMax; iter++) {
-        int ca[n * k];
+        int *ca = calloc(n * k, sizeof(int));
         // DBG
         if (method == 'e') {
-            int di[n];
-            double pi[n * p];
+            int *di = calloc(n, sizeof(int));
+            double *pi = calloc(n * p, sizeof(double));
             compute_di_pi(di, pi, cl, n, k);
             for (it = 0; it < k; it++) {
                 euc_compute_center(cen, it, x, di, pi, cl, n, p, k);
             }
 
             wss = euc_attribution(x, cen, cl, ca, n, p, k);
+            free(di); free(pi);
         }
 
         if (method == 'm') {
@@ -498,7 +515,10 @@ void R_okm(const double *x, double *cen, const int *pmax, const int *pk, const i
             for (it = 0; it < n * k; it++) scl[iter * n * k + it] = cl[it];
             *ex = iter;
         }
-        if (identical(ca, cl, nk)) break;
+
+        int dobreak = identical(ca, cl, nk);
+        free(ca);
+        if (dobreak) break;
     }
 
     double tmp = 0.0;
@@ -510,4 +530,5 @@ void R_okm(const double *x, double *cen, const int *pmax, const int *pk, const i
     }
     *pover = tmp / (double)n;
     *pwss = wss;
+    free(ai);
 }
