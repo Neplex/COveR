@@ -25,7 +25,7 @@ static R_NativePrimitiveArgType okm_t[] = {REALSXP, REALSXP, INTSXP,  INTSXP, IN
                                            REALSXP, REALSXP, REALSXP, INTSXP};
 static const R_CMethodDef cMethods[] = {{"_okm", (DL_FUNC)&R_okm, 16, okm_t}, {NULL, NULL, 0}};
 
-void R_init_COveRpatch(DllInfo *info) {
+void R_init_COveR(DllInfo *info) {
     R_registerRoutines(info, cMethods, callMethods, NULL, NULL);
     R_useDynamicSymbols(info, FALSE);
     R_forceSymbols(info, FALSE);
