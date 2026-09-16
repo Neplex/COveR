@@ -1,11 +1,12 @@
 Package: COveR
 Title: Clustering with Overlaps
-Version: 1.1.0
+Version: 1.1.1
 URL: https://github.com/Neplex/COveR
 BugReports: https://github.com/Neplex/COveR/issues
 Authors@R: c(
   person("Guillaume", "Cleuziou", email = "guillaume.cleuziou@univ-orleans.fr", role = "aut"),
-  person("Nicolas", "Hiot", email = "nicolas.hiot@univ-orleans.fr", role = "cre", comment = c(ORCID = "0000-0003-4318-4906")))
+  person("Nicolas", "Hiot", email = "nicolas.hiot@univ-orleans.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-4318-4906")),
+  person("Chengge", "Shi", email = "1826930551@qq.com", role = "ctb"))
 Description: Provide functions for overlaps clustering, fuzzy clustering and interval-valued data manipulation. The package implement the following algorithms:
 	OKM (Overlapping Kmeans) from Cleuziou, G. (2007) <doi:10.1109/icpr.2008.4761079> ;
 	NEOKM (Non-exhaustive overlapping Kmeans) from Whang, J. J., Dhillon, I. S., and Gleich, D. F. (2015) <doi:10.1137/1.9781611974010.105> ;

@@ -35,7 +35,7 @@ keywords:
   - overlapping
   - interval
 license: GPL-2.0-or-later
-version: 1.1.0
+version: 1.1.1
 date-released: '2024-11-13'
 references:
   - title: "An extended version of the k-means method for overlapping clustering"
