@@ -4,6 +4,7 @@
 ![CRAN/METACRAN Version](https://img.shields.io/cran/v/COveR)
 ![CRAN/METACRAN License](https://img.shields.io/cran/l/COveR)
 [![DOI](https://zenodo.org/badge/DOI/10.32614/CRAN.package.COveR)](https://doi.org/10.32614/CRAN.package.COveR)
+[![Monthly Download](https://cranlogs.r-pkg.org/badges/COveR)](https://cran.r-project.org/package=COveR)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/neplex/cover/rworkflows.yml)
 
 Clustering with Overlaps in R.
